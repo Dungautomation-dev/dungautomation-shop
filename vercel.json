@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "name": "dungautomation-shop",
+  "routes": [
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
+}
