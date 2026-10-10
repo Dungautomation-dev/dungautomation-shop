@@ -23,21 +23,24 @@ export default function UIOverlay({
   const [isPlayingAudio, setIsPlayingAudio] = useState(false)
   const [showLightSettings, setShowLightSettings] = useState(false)
   const [showStarModal, setShowStarModal] = useState(false)
+  const [showWelcomeGate, setShowWelcomeGate] = useState(() => {
+    return !localStorage.getItem('dungauto_welcome_unlocked')
+  })
   const [toastMessage, setToastMessage] = useState(null)
   const audioCtxRef = useRef(null)
   const audioIntervalRef = useRef(null)
 
-  // Hiển thị gợi ý Star GitHub sau 22 giây trải nghiệm nếu chưa đánh sao
+  // Hiển thị gợi ý Star GitHub sau 30 giây trải nghiệm nếu chưa từng đánh sao
   useEffect(() => {
     const hasPrompted = sessionStorage.getItem('star_prompted')
-    if (!hasPrompted) {
+    if (!hasPrompted && !showWelcomeGate) {
       const timer = setTimeout(() => {
         setShowStarModal(true)
         sessionStorage.setItem('star_prompted', 'true')
-      }, 22000)
+      }, 30000)
       return () => clearTimeout(timer)
     }
-  }, [])
+  }, [showWelcomeGate])
 
   // Web Audio API ambient lofi tech synth
   const toggleAudio = () => {
@@ -118,6 +121,24 @@ export default function UIOverlay({
     window.open('https://github.com/Dungautomation-dev/dungautomation-shop', '_blank')
   }
 
+  const handleWelcomeStar = () => {
+    confetti({
+      particleCount: 160,
+      spread: 100,
+      origin: { y: 0.5 }
+    })
+    localStorage.setItem('dungauto_welcome_unlocked', 'true')
+    setShowWelcomeGate(false)
+    showToast('⭐ Cảm ơn bạn đã tặng Star cho Dung Automation trên GitHub! Showroom đã mở khóa.')
+    window.open('https://github.com/Dungautomation-dev/dungautomation-shop', '_blank')
+  }
+
+  const handleWelcomeDirect = () => {
+    localStorage.setItem('dungauto_welcome_unlocked', 'true')
+    setShowWelcomeGate(false)
+    showToast('🚀 Chào mừng bạn bước vào Showroom 3D DungAutomation!')
+  }
+
   return (
     <div className="hud-container">
       {/* ================= TOP HEADER BAR ================= */}
@@ -188,6 +209,15 @@ export default function UIOverlay({
             <span className="star-icon">⭐</span>
             <span>Star Repo</span>
           </a>
+
+          {/* Nút mở lại Welcome Gate thông tin */}
+          <button
+            className="hud-btn info-btn"
+            onClick={() => setShowWelcomeGate(true)}
+            title="Xem thông tin dự án & Cổng chào mừng"
+          >
+            ℹ️ Giới thiệu
+          </button>
 
           {/* Nút mở bảng điều chỉnh ánh sáng chống chói */}
           <button
@@ -401,6 +431,78 @@ export default function UIOverlay({
             </button>
           </div>
         </aside>
+      )}
+
+      {/* ================= WELCOME STAR GATE & 1-CLICK LAUNCH MODAL ================= */}
+      {showWelcomeGate && (
+        <div className="welcome-gate-overlay">
+          <div className="welcome-gate-card glass-card">
+            <div className="welcome-gate-badge">
+              <span className="star-pulse">⭐</span> DỰ ÁN MÃ NGUỒN MỞ • REACT THREE FIBER
+            </div>
+
+            <h1 className="welcome-gate-title">
+              ⚡ SHOWROOM 3D DUNGAUTOMATION
+            </h1>
+            <p className="welcome-gate-subtitle">
+              Không gian số hóa 3D tương tác thời gian thực: Tủ điện công nghiệp VASCO chuẩn nhà máy & Thiết bị công nghệ tương lai Cyberpunk 2077.
+            </p>
+
+            <div className="welcome-gate-highlights">
+              <div className="highlight-item">
+                <span className="hl-icon">⚡</span>
+                <div className="hl-text">
+                  <b>Tủ Điện VASCO Chuẩn Nhà Máy</b>
+                  <span>MSB 2000A • ATS 800A • Tụ Bù 300kVAR • PLC S7-1200 + HMI SCADA</span>
+                </div>
+              </div>
+              <div className="highlight-item">
+                <span className="hl-icon">📱</span>
+                <div className="hl-text">
+                  <b>Công Nghệ Cyberpunk 2077</b>
+                  <span>Điện thoại gập 3 màn • TV OLED trong suốt 8K • Laptop Cyberdeck</span>
+                </div>
+              </div>
+              <div className="highlight-item">
+                <span className="hl-icon">🌸</span>
+                <div className="hl-text">
+                  <b>Góc Phố Hà Nội 4 Mùa</b>
+                  <span>Xuân - Hạ - Thu - Đông • Hiệu ứng hoa ban, đom đóm, lá vàng, tuyết trắng</span>
+                </div>
+              </div>
+              <div className="highlight-item">
+                <span className="hl-icon">🎮</span>
+                <div className="hl-text">
+                  <b>Tương Tác 360° Chống Chói Đỉnh Cao</b>
+                  <span>Bề mặt nhám mịn matte slate • Tự do xoay chuột không lo snap back</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="welcome-gate-cta-box">
+              <p className="cta-note">
+                Tặng 1 ⭐ Star trên GitHub để ủng hộ tác giả tiếp tục phát triển thêm nhiều dự án Tự động hóa & Web 3D mã nguồn mở chất lượng cao!
+              </p>
+              <div className="welcome-gate-actions">
+                <button
+                  className="welcome-btn primary-star"
+                  onClick={handleWelcomeStar}
+                  title="Mở tab GitHub repo để đánh sao và mở khóa Showroom ngay lập tức"
+                >
+                  <span className="btn-star-icon">⭐</span>
+                  <span>ĐÁNH SAO & TRUY CẬP NGAY</span>
+                </button>
+                <button
+                  className="welcome-btn secondary-skip"
+                  onClick={handleWelcomeDirect}
+                  title="Vào trực tiếp Showroom không cần qua cổng"
+                >
+                  Khám phá trực tiếp (Bỏ qua)
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* ================= TOAST NOTIFICATION ================= */}
