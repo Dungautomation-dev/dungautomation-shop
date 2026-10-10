@@ -10,6 +10,8 @@ import RoboticsDept from './RoboticsDept'
 import MakerBenchDept from './MakerBenchDept'
 import ArduinoEspDept from './ArduinoEspDept'
 import CheckoutDept from './CheckoutDept'
+import CyberTechDept from './CyberTechDept'
+import StreetCornerEnvironment from './StreetCornerEnvironment'
 import Customers from './Customers'
 import LightingAndPostFx from './LightingAndPostFx'
 
@@ -65,6 +67,19 @@ const DEPT_CATALOG = {
       'Cảm biến môi trường BME280, MPU6050, RFID RC522'
     ],
     desc: 'Tủ kính trưng bày 3 tầng chiếu sáng viền LED tập hợp đầy đủ các dòng bo mạch nhúng thông minh, mạch nạp và module cảm biến IoT phổ biến nhất thị trường.'
+  },
+  cybertech: {
+    id: 'cybertech',
+    title: 'Khu Trưng Bày Công Nghệ Tương Lai Cyberpunk 2077',
+    category: 'Cyberpunk & Future Gadgets',
+    price: 'Từ: 18.500.000 đ - 120.000.000 đ',
+    specs: [
+      'Điện thoại gập 3 cánh Tri-Fold OLED 10.2 inch uốn dẻo siêu mỏng',
+      'Tivi / Màn hình trong suốt Transparent Micro-OLED 8K 240Hz',
+      'Laptop Cyberdeck 2 màn hình cảm ứng, bàn phím cơ quang học trong suốt RGB',
+      'Drone trợ lý trí tuệ nhân tạo bay lơ lửng bằng lực nâng từ trường ion'
+    ],
+    desc: 'Khu vực trưng bày những thiết bị công nghệ đỉnh cao phong cách Cyberpunk 2077, cho phép trải nghiệm trực tiếp các thiết bị màn hình gập và màn hình trong suốt thế hệ mới.'
   }
 }
 
@@ -95,6 +110,10 @@ function CameraDirector({ preset, controlsRef }) {
       case 'arduino':
         targetCamPos.current.set(-1.0, 5.2, 6.2)
         targetLookAt.current.set(-2.2, 1.6, 2.5)
+        break
+      case 'cybertech':
+        targetCamPos.current.set(6.2, 4.5, 4.8)
+        targetLookAt.current.set(2.8, 1.4, 1.2)
         break
       case 'checkout':
         targetCamPos.current.set(5.8, 4.8, 7.8)
@@ -144,7 +163,14 @@ function CameraDirector({ preset, controlsRef }) {
   return null
 }
 
-export default function CanvasScene({ isNightMode, onSelectItem, cameraPreset }) {
+export default function CanvasScene({
+  isNightMode,
+  season,
+  bloomIntensity,
+  lightBrightness,
+  onSelectItem,
+  cameraPreset
+}) {
   const controlsRef = useRef()
 
   const handleSelect = (item) => {
@@ -156,7 +182,7 @@ export default function CanvasScene({ isNightMode, onSelectItem, cameraPreset })
           category: 'Khu Trưng Bày',
           price: 'Liên hệ',
           specs: [],
-          desc: 'Chi tiết linh kiện tại cửa hàng DungAutomation.'
+          desc: 'Chi tiết linh kiện tại showroom DungAutomation.'
         }
       )
     } else {
@@ -172,7 +198,7 @@ export default function CanvasScene({ isNightMode, onSelectItem, cameraPreset })
         antialias: true,
         powerPreference: 'high-performance',
         toneMapping: THREE.ACESFilmicToneMapping,
-        toneMappingExposure: 1.15
+        toneMappingExposure: 1.05
       }}
       style={{ width: '100%', height: '100%' }}
     >
@@ -189,33 +215,44 @@ export default function CanvasScene({ isNightMode, onSelectItem, cameraPreset })
 
       <CameraDirector preset={cameraPreset} controlsRef={controlsRef} />
 
-      {/* Lighting Rig, HDRI Environment & Post-processing Bloom */}
-      <LightingAndPostFx isNightMode={isNightMode} />
+      {/* Lighting Rig, HDRI Environment & Post-processing Bloom (Không chói mắt) */}
+      <LightingAndPostFx
+        isNightMode={isNightMode}
+        season={season}
+        bloomIntensity={bloomIntensity}
+        lightBrightness={lightBrightness}
+      />
 
       {/* ================= ARCHITECTURAL DIORAMA SCENE ================= */}
       <group position={[0, 0, 0]}>
-        {/* Curving Plinth, Italian Marble Floor & Sidewalk */}
-        <DioramaPlinth />
+        {/* Curving Plinth, Sàn Slate chống chói & Vỉa hè ngoại thất */}
+        <DioramaPlinth season={season} />
 
-        {/* Slatted Cedar Walls, Structural Steel Beams, Glass & Neon Signage */}
+        {/* Khung kiến trúc mở không bị che chắn */}
         <StoreArchitecture isNight={isNightMode} />
 
-        {/* Department 1: Siemens PLC S7-1200, HMI SCADA, Inverter VFD Cabinet */}
-        <PlcAutomationDept level={2} onSelect={handleSelect} />
+        {/* Phân khu 1: Siemens PLC S7-1200, HMI SCADA, Inverter VFD Cabinet */}
+        <PlcAutomationDept onSelect={handleSelect} />
 
-        {/* Department 2: 6-DOF Robotic Arm, Turntable, 3D Printer */}
-        <RoboticsDept level={2} onSelect={handleSelect} demoBoost={false} />
+        {/* Phân khu 2: Cánh tay Robot 6-DOF, Mâm xoay Turntable, Máy in 3D */}
+        <RoboticsDept onSelect={handleSelect} />
 
-        {/* Department 3: Maker Lab Workbench, Rigol Oscilloscope, Soldering Station */}
-        <MakerBenchDept level={2} onSelect={handleSelect} />
+        {/* Phân khu 3: Bàn Maker Lab Workbench, Máy hiện sóng Rigol, Trạm hàn */}
+        <MakerBenchDept onSelect={handleSelect} />
 
-        {/* Department 4: Illuminated Glass Vitrine with Arduino, ESP32, Raspberry Pi */}
-        <ArduinoEspDept level={2} onSelect={handleSelect} />
+        {/* Phân khu 4: Tủ kính vi điều khiển Arduino, ESP32, Raspberry Pi */}
+        <ArduinoEspDept onSelect={handleSelect} />
 
-        {/* Department 5: Walnut Checkout Counter, Electric Scooter, Streetlamp & Planters */}
+        {/* Phân khu MỚI: ĐỒ CÔNG NGHỆ TƯƠNG LAI CYBERPUNK 2077 (Tri-Fold Phone, TV Trong Suốt, Laptop 2 Màn Hình, Drone) */}
+        <CyberTechDept onSelect={handleSelect} />
+
+        {/* Phân khu 5: Quầy Thu Ngân, Xe Máy Điện Giao Vận Hoả Tốc */}
         <CheckoutDept onSelect={handleSelect} />
 
-        {/* Stylized Humanoid Customers & Staff walking with animated legs */}
+        {/* CẢNH VẬT GÓC PHỐ 4 MÙA (Hàng cây đổi màu, hạt thời tiết bay, máy bán nước, biển tên phố) */}
+        <StreetCornerEnvironment season={season} isNight={isNightMode} onSelect={handleSelect} />
+
+        {/* Nhân vật khách hàng & kỹ sư dạo bước */}
         <Customers onSelect={handleSelect} />
       </group>
     </Canvas>

@@ -4,6 +4,9 @@ import UIOverlay from './components/UIOverlay'
 
 export default function App() {
   const [isNightMode, setIsNightMode] = useState(false)
+  const [season, setSeason] = useState('spring') // 'spring', 'summer', 'autumn', 'winter'
+  const [bloomIntensity, setBloomIntensity] = useState(0.35) // Dịu nhẹ, không lóa mắt
+  const [lightBrightness, setLightBrightness] = useState(0.9)
   const [selectedItem, setSelectedItem] = useState(null)
   const [cameraPreset, setCameraPreset] = useState('overview')
   const [stats, setStats] = useState({
@@ -13,7 +16,7 @@ export default function App() {
     visitors: 24
   })
 
-  // Simulated live tycoon orders & revenue increment
+  // Tự động gia tăng doanh thu theo thời gian thực (Tycoon Mode)
   useEffect(() => {
     const interval = setInterval(() => {
       setStats((prev) => {
@@ -42,6 +45,9 @@ export default function App() {
       >
         <CanvasScene
           isNightMode={isNightMode}
+          season={season}
+          bloomIntensity={bloomIntensity}
+          lightBrightness={lightBrightness}
           onSelectItem={setSelectedItem}
           cameraPreset={cameraPreset}
         />
@@ -52,6 +58,12 @@ export default function App() {
         onCloseInspect={() => setSelectedItem(null)}
         isNightMode={isNightMode}
         onToggleNightMode={() => setIsNightMode((v) => !v)}
+        season={season}
+        onChangeSeason={setSeason}
+        bloomIntensity={bloomIntensity}
+        onChangeBloom={setBloomIntensity}
+        lightBrightness={lightBrightness}
+        onChangeBrightness={setLightBrightness}
         onCameraPreset={setCameraPreset}
         stats={stats}
       />

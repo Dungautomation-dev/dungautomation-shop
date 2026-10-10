@@ -6,6 +6,12 @@ export default function UIOverlay({
   onCloseInspect,
   isNightMode,
   onToggleNightMode,
+  season = 'spring',
+  onChangeSeason,
+  bloomIntensity = 0.35,
+  onChangeBloom,
+  lightBrightness = 0.9,
+  onChangeBrightness,
   onCameraPreset,
   stats = {
     revenue: 348200000,
@@ -15,6 +21,7 @@ export default function UIOverlay({
   }
 }) {
   const [isPlayingAudio, setIsPlayingAudio] = useState(false)
+  const [showLightSettings, setShowLightSettings] = useState(false)
   const [toastMessage, setToastMessage] = useState(null)
   const audioCtxRef = useRef(null)
   const audioIntervalRef = useRef(null)
@@ -33,7 +40,6 @@ export default function UIOverlay({
       const ctx = new (window.AudioContext || window.webkitAudioContext)()
       audioCtxRef.current = ctx
 
-      // Soft ambient chord progression
       const chords = [
         [220, 261.63, 329.63, 392], // Am7
         [174.61, 220, 261.63, 329.63], // Fmaj7
@@ -54,7 +60,7 @@ export default function UIOverlay({
           osc.frequency.setValueAtTime(freq, ctx.currentTime)
 
           gain.gain.setValueAtTime(0, ctx.currentTime)
-          gain.gain.linearRampToValueAtTime(0.02, ctx.currentTime + 1.2)
+          gain.gain.linearRampToValueAtTime(0.015, ctx.currentTime + 1.2)
           gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 4.8)
 
           osc.connect(gain)
@@ -97,42 +103,67 @@ export default function UIOverlay({
             <span className="brand-glow-dot"></span>
             DUNGAUTOMATION
           </div>
-          <div className="brand-title">TRUNG TÂM TỰ ĐỘNG HOÁ & MAKER LAB 3D</div>
+          <div className="brand-title">SHOWROOM TỰ ĐỘNG HÓA & CYBERPUNK LAB 3D</div>
         </div>
 
-        {/* Live Shop Metrics */}
-        <div className="hud-metrics">
-          <div className="metric-pill">
-            <span className="metric-icon">💰</span>
-            <div className="metric-meta">
-              <span className="metric-label">Doanh thu tháng</span>
-              <span className="metric-val">{stats.revenue.toLocaleString('vi-VN')} đ</span>
-            </div>
-          </div>
-          <div className="metric-pill">
-            <span className="metric-icon">📦</span>
-            <div className="metric-meta">
-              <span className="metric-label">Đơn hôm nay</span>
-              <span className="metric-val">{stats.orders} đơn</span>
-            </div>
-          </div>
-          <div className="metric-pill">
-            <span className="metric-icon">🦾</span>
-            <div className="metric-meta">
-              <span className="metric-label">Hiệu suất Robot</span>
-              <span className="metric-val">{stats.efficiency}%</span>
-            </div>
-          </div>
+        {/* BỘ CHỌN 4 MÙA GÓC PHỐ HÀ NỘI */}
+        <div className="season-selector-bar">
+          <span className="season-label">Thời tiết:</span>
+          <button
+            className={`season-pill-btn ${season === 'spring' ? 'active' : ''}`}
+            onClick={() => {
+              onChangeSeason?.('spring')
+              showToast('🌸 Đã chuyển sang Mùa Xuân: Hoa ban & anh đào nở rộ')
+            }}
+          >
+            🌸 Xuân
+          </button>
+          <button
+            className={`season-pill-btn ${season === 'summer' ? 'active' : ''}`}
+            onClick={() => {
+              onChangeSeason?.('summer')
+              showToast('☀️ Đã chuyển sang Mùa Hạ: Nắng vàng & đom đóm lung linh')
+            }}
+          >
+            ☀️ Hạ
+          </button>
+          <button
+            className={`season-pill-btn ${season === 'autumn' ? 'active' : ''}`}
+            onClick={() => {
+              onChangeSeason?.('autumn')
+              showToast('🍂 Đã chuyển sang Mùa Thu: Cây bàng lá đỏ & hoàng hôn ấm')
+            }}
+          >
+            🍂 Thu
+          </button>
+          <button
+            className={`season-pill-btn ${season === 'winter' ? 'active' : ''}`}
+            onClick={() => {
+              onChangeSeason?.('winter')
+              showToast('❄️ Đã chuyển sang Mùa Đông: Tuyết trắng phủ nhẹ góc phố')
+            }}
+          >
+            ❄️ Đông
+          </button>
         </div>
 
-        {/* Action Controls */}
+        {/* Nút bấm điều khiển hệ thống */}
         <div className="hud-controls">
+          {/* Nút mở bảng điều chỉnh ánh sáng chống chói */}
+          <button
+            className={`hud-btn ${showLightSettings ? 'active' : ''}`}
+            onClick={() => setShowLightSettings((v) => !v)}
+            title="Tùy chỉnh độ chói và độ sáng của đèn"
+          >
+            ⚙️ Chỉnh Ánh Sáng
+          </button>
+
           <button
             className={`hud-btn ${isNightMode ? 'active' : ''}`}
             onClick={onToggleNightMode}
             title={isNightMode ? 'Chuyển sang ban ngày' : 'Chuyển sang ban đêm rực sáng neon'}
           >
-            {isNightMode ? '🌙 Đêm Neon' : '☀️ Ngày Nắng'}
+            {isNightMode ? '🌙 Đêm' : '☀️ Ngày'}
           </button>
 
           <button
@@ -140,7 +171,7 @@ export default function UIOverlay({
             onClick={toggleAudio}
             title="Bật/Tắt nhạc nền thư giãn"
           >
-            {isPlayingAudio ? '🔊 Nhạc Lofi' : '🔇 Âm thanh'}
+            {isPlayingAudio ? '🔊 Nhạc' : '🔇 Âm thanh'}
           </button>
 
           <button
@@ -153,8 +184,83 @@ export default function UIOverlay({
         </div>
       </header>
 
+      {/* ================= BẢNG ĐIỀU CHỈNH ÁNH SÁNG & CHỐNG CHÓI POPUP ================= */}
+      {showLightSettings && (
+        <div className="light-settings-panel glass-card">
+          <div className="settings-header">
+            <span>⚙️ ĐIỀU CHỈNH ÁNH SÁNG & CHỐNG CHÓI</span>
+            <button className="settings-close-btn" onClick={() => setShowLightSettings(false)}>
+              ✕
+            </button>
+          </div>
+
+          {/* Thanh trượt Độ Chói (Bloom Glow) */}
+          <div className="setting-group">
+            <div className="setting-label-row">
+              <span>✨ Độ Chói (Glow / Bloom):</span>
+              <span className="setting-val-tag">
+                {bloomIntensity === 0 ? 'Đã tắt hoàn toàn' : `${Math.round(bloomIntensity * 100)}%`}
+              </span>
+            </div>
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.05"
+              value={bloomIntensity}
+              onChange={(e) => onChangeBloom?.(parseFloat(e.target.value))}
+              className="tech-slider"
+            />
+            <div className="slider-presets">
+              <button
+                className={`preset-btn ${bloomIntensity === 0 ? 'active' : ''}`}
+                onClick={() => onChangeBloom?.(0)}
+              >
+                Tắt Chói (0%)
+              </button>
+              <button
+                className={`preset-btn ${bloomIntensity === 0.35 ? 'active' : ''}`}
+                onClick={() => onChangeBloom?.(0.35)}
+              >
+                Dịu Mát (Chuẩn)
+              </button>
+              <button
+                className={`preset-btn ${bloomIntensity === 0.8 ? 'active' : ''}`}
+                onClick={() => onChangeBloom?.(0.8)}
+              >
+                Rực Rỡ (Cyber)
+              </button>
+            </div>
+          </div>
+
+          {/* Thanh trượt Độ Sáng Đèn (Brightness) */}
+          <div className="setting-group">
+            <div className="setting-label-row">
+              <span>💡 Độ Sáng Showroom:</span>
+              <span className="setting-val-tag">{Math.round(lightBrightness * 100)}%</span>
+            </div>
+            <input
+              type="range"
+              min="0.4"
+              max="1.5"
+              step="0.05"
+              value={lightBrightness}
+              onChange={(e) => onChangeBrightness?.(parseFloat(e.target.value))}
+              className="tech-slider"
+            />
+          </div>
+        </div>
+      )}
+
       {/* ================= BOTTOM DEPARTMENT NAVIGATOR ================= */}
       <nav className="hud-departments glass-card">
+        <button
+          className="dept-nav-btn"
+          onClick={() => onCameraPreset?.('cybertech')}
+        >
+          <span className="dept-icon">📱</span>
+          <span>Đồ Cyberpunk 2077</span>
+        </button>
         <button
           className="dept-nav-btn"
           onClick={() => onCameraPreset?.('plc')}
@@ -198,10 +304,10 @@ export default function UIOverlay({
           <span>🎮 Thao Tác Chuột & Phím</span>
         </div>
         <div className="hint-body">
-          <div>• <b>Chuột trái:</b> Xoay 360° ngắm mọi góc độ</div>
+          <div>• <b>Chuột trái:</b> Xoay 360° tự do (không bị giật)</div>
           <div>• <b>Chuột phải:</b> Di chuyển góc nhìn (Pan)</div>
           <div>• <b>Cuộn chuột:</b> Phóng to / Thu nhỏ</div>
-          <div>• <b>Click mô hình:</b> Xem thông số kỹ thuật chi tiết</div>
+          <div>• <b>Click mô hình:</b> Khám phá đồ công nghệ tương lai</div>
         </div>
       </div>
 
