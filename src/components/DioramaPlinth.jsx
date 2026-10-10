@@ -1,79 +1,79 @@
 import React from 'react'
 
+/**
+ * Khối Đế Diorama Kiến Trúc Mở Rộng 36x36m (Expanded Diorama Plinth Base)
+ * Nền tảng nâng đỡ toàn bộ Showroom DungAutomation mở rộng và góc phố sầm uất bao quanh.
+ * Thiết kế vát cạnh giật cấp tinh tế, sàn gạch Slate chống chói cao cấp.
+ */
 export function DioramaPlinth({ season = 'spring' }) {
   return (
     <group position={[0, 0, 0]}>
-      {/* ================= 1. KHỐI ĐẾ KIẾN TRÚC VÁT CẠNH (PLINTH BASE) ================= */}
+      {/* ================= 1. KHỐI ĐẾ KIẾN TRÚC VÁT CẠNH (PLINTH BASE 36x36m) ================= */}
       {/* Khối đế dưới cùng màu đá basalt xám đen sang trọng */}
       <mesh position={[0, -0.75, 0]} receiveShadow>
-        <boxGeometry args={[22, 1.3, 22]} />
-        <meshStandardMaterial color="#0f172a" roughness={0.7} metalness={0.2} />
+        <boxGeometry args={[36, 1.3, 36]} />
+        <meshStandardMaterial color="#0b0f19" roughness={0.7} metalness={0.25} />
       </mesh>
 
       {/* Tầng vát chân bục giật cấp tinh tế */}
       <mesh position={[0, -0.08, 0]} receiveShadow>
-        <boxGeometry args={[22.3, 0.08, 22.3]} />
+        <boxGeometry args={[36.4, 0.08, 36.4]} />
         <meshStandardMaterial color="#1e293b" roughness={0.6} metalness={0.3} />
       </mesh>
 
-      {/* ================= 2. DẢI LED CYAN VIỀN KHÔNG BỊ TRÙNG TỌA ĐỘ ================= */}
-      {/* Đặt ở khe âm dưới gờ vỉa hè tại Y = -0.03 */}
+      {/* Dải LED cyan tinh tế viền khe âm bục */}
       <mesh position={[0, -0.03, 0]}>
-        <boxGeometry args={[22.34, 0.025, 22.34]} />
+        <boxGeometry args={[36.44, 0.025, 36.44]} />
         <meshBasicMaterial color="#00e5ff" />
       </mesh>
 
-      {/* ================= 3. SÀN VỈA HÈ ĐÁ HOA CƯƠNG NGOẠI THẤT (GRANITE PAVERS) ================= */}
-      {/* Nằm trọn vẹn tại Y = 0.035, bề dày 0.07 -> Đỉnh sàn vỉa hè đạt Y = 0.07 */}
+      {/* ================= 2. NỀN VỈA HÈ ĐÁ HOA CƯƠNG TOÀN KHU ĐÔ THỊ ================= */}
       <mesh position={[0, 0.035, 0]} receiveShadow>
-        <boxGeometry args={[21.8, 0.07, 21.8]} />
+        <boxGeometry args={[35.8, 0.07, 35.8]} />
         <meshStandardMaterial color="#1e2430" roughness={0.85} metalness={0.1} />
       </mesh>
 
-      {/* Vạch kẻ hoa văn lát đá vỉa hè ngoại thất tinh tế */}
-      <mesh position={[6.5, 0.072, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[7.5, 21.6]} />
-        <meshStandardMaterial color="#171c26" roughness={0.9} />
-      </mesh>
-
-      {/* Mảng tuyết vỉa hè nếu là mùa đông */}
+      {/* Lớp tuyết mỏng trên vỉa hè nếu là Mùa Đông */}
       {season === 'winter' && (
-        <mesh position={[8.5, 0.073, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <planeGeometry args={[3.2, 21.5]} />
+        <mesh position={[12, 0.073, 12]} rotation={[-Math.PI / 2, 0, 0]}>
+          <planeGeometry args={[14, 14]} />
           <meshStandardMaterial color="#f1f5f9" roughness={0.8} />
         </mesh>
       )}
 
-      {/* ================= 4. SÀN SHOWROOM NỘI THẤT CAO CẤP CHỐNG CHÓI (NON-GLARE MATTE SLATE FLOOR) ================= */}
-      {/* Nẹp viền kim loại nhôm titan phay xước bo cạnh bậc thềm */}
-      <mesh position={[-1.5, 0.10, -1.5]} receiveShadow>
-        <boxGeometry args={[15.2, 0.06, 15.2]} />
+      {/* ================= 3. SÀN SHOWROOM MỞ RỘNG 21x19m NỘI THẤT CAO CẤP ================= */}
+      {/* Nẹp viền nhôm titan mờ bo quanh gờ bậc thềm showroom */}
+      <mesh position={[-1.0, 0.1, -2.0]} receiveShadow>
+        <boxGeometry args={[21.2, 0.06, 19.2]} />
         <meshStandardMaterial color="#475569" roughness={0.3} metalness={0.8} />
       </mesh>
 
-      {/* Sàn đá Slate/Gạch Porcelain xám khói cao cấp, độ nhám 0.6 khử chói hoàn toàn */}
-      <mesh position={[-1.5, 0.14, -1.5]} receiveShadow>
-        <boxGeometry args={[15.0, 0.04, 15.0]} />
+      {/* Sàn đá Slate / Gạch Porcelain xám khói tự nhiên chống chói hoàn toàn */}
+      <mesh position={[-1.0, 0.14, -2.0]} receiveShadow>
+        <boxGeometry args={[21.0, 0.04, 19.0]} />
         <meshStandardMaterial
-          color="#29303d" // Xám khói đá tự nhiên cao cấp, không bị nổ trắng chói mắt
-          roughness={0.65}
-          metalness={0.1}
+          color="#222933"
+          roughness={0.68}
+          metalness={0.12}
         />
       </mesh>
 
-      {/* Lưới đường ron gạch phân ô thanh lịch trên sàn (Tile Joints) */}
+      {/* Lưới chỉ ron gạch phân ô thanh lịch trên mặt sàn showroom (Tile Joints) */}
       <gridHelper
-        args={[15, 12, '#3b4759', '#3b4759']}
-        position={[-1.5, 0.162, -1.5]}
+        args={[21, 16, '#384353', '#333e4d']}
+        position={[-1.0, 0.162, -2.0]}
       />
 
       {/* Len chân tường gạch viền tối màu quanh showroom */}
-      <mesh position={[-1.5, 0.18, -8.95]}>
-        <boxGeometry args={[14.8, 0.06, 0.1]} />
+      {/* Len tường sau (Back Baseboard) */}
+      <mesh position={[-1.0, 0.18, -11.45]}>
+        <boxGeometry args={[21.0, 0.06, 0.1]} />
         <meshStandardMaterial color="#0f172a" roughness={0.5} />
       </mesh>
-      <mesh position={[-8.95, 0.18, -1.5]}>
-        <boxGeometry args={[0.1, 0.06, 14.8]} />
+
+      {/* Len tường trái (Left Baseboard) */}
+      <mesh position={[-11.45, 0.18, -2.0]}>
+        <boxGeometry args={[0.1, 0.06, 19.0]} />
         <meshStandardMaterial color="#0f172a" roughness={0.5} />
       </mesh>
     </group>

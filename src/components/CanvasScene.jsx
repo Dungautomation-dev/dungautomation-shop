@@ -126,20 +126,20 @@ function CameraDirector({ preset, controlsRef }) {
 
     switch (preset) {
       case 'plc':
-        targetCamPos.current.set(-1.5, 5.5, 3.5)
-        targetLookAt.current.set(-3.2, 1.6, -2.0)
+        targetCamPos.current.set(-2.5, 5.5, 3.5)
+        targetLookAt.current.set(-5.5, 1.8, -2.0)
         break
       case 'robotics':
-        targetCamPos.current.set(5.5, 5.2, 1.8)
-        targetLookAt.current.set(2.8, 1.5, -2.6)
+        targetCamPos.current.set(5.5, 5.0, 1.2)
+        targetLookAt.current.set(2.2, 1.5, -2.8)
         break
       case 'maker':
-        targetCamPos.current.set(2.6, 5.0, 1.0)
-        targetLookAt.current.set(0.8, 1.4, -2.6)
+        targetCamPos.current.set(1.5, 4.8, -3.8)
+        targetLookAt.current.set(-1.2, 1.4, -6.2)
         break
       case 'arduino':
-        targetCamPos.current.set(-1.0, 5.2, 6.2)
-        targetLookAt.current.set(-2.2, 1.6, 2.5)
+        targetCamPos.current.set(-2.5, 4.8, 6.2)
+        targetLookAt.current.set(-6.2, 1.6, 2.4)
         break
       case 'cybertech':
         targetCamPos.current.set(6.2, 4.5, 4.8)
@@ -150,20 +150,20 @@ function CameraDirector({ preset, controlsRef }) {
         targetLookAt.current.set(-1.6, 1.3, -1.8)
         break
       case 'scada':
-        targetCamPos.current.set(-2.0, 4.2, -3.4)
+        targetCamPos.current.set(-1.8, 4.5, -3.2)
         targetLookAt.current.set(-4.2, 1.8, -6.0)
         break
       case 'earth':
-        targetCamPos.current.set(0, 24, -8)
-        targetLookAt.current.set(0, 24, -28)
+        targetCamPos.current.set(4.5, 4.2, 1.8)
+        targetLookAt.current.set(1.2, 2.25, -1.5)
         break
       case 'checkout':
-        targetCamPos.current.set(5.8, 4.8, 7.8)
-        targetLookAt.current.set(1.8, 1.3, 3.8)
+        targetCamPos.current.set(5.5, 4.5, 7.8)
+        targetLookAt.current.set(1.8, 1.3, 4.2)
         break
       case 'overview':
       default:
-        targetCamPos.current.set(18, 16, 20)
+        targetCamPos.current.set(22, 19, 24)
         targetLookAt.current.set(0, 1.5, 0)
         break
     }
@@ -235,7 +235,7 @@ export default function CanvasScene({
   return (
     <Canvas
       shadows
-      camera={{ position: [18, 16, 20], fov: 36, near: 0.1, far: 100 }}
+      camera={{ position: [22, 19, 24], fov: 36, near: 0.1, far: 120 }}
       gl={{
         antialias: true,
         powerPreference: 'high-performance',

@@ -326,17 +326,17 @@ export function Customers({ onSelect }) {
 
       {/* 4. Du khách dạo bước trên vỉa hè ngắm robot 6 trục qua kính */}
       <DioramaCharacter
-        initialPos={[5.5, 0, -2.5]}
+        initialPos={[10.5, 0, -4.5]}
         jacketColor="#be185d" // Áo khoác măng tô hồng cánh sen sang trọng
         pantsColor="#18181b"
         hairColor="#0a0a0a"
         speed={0.7}
         waypoints={[
-          [5.5, 0, -2.5, 1.0], // Đi trên vỉa hè
-          [4.5, 0, -1.5, 5.0], // Dừng lại ngắm cánh tay robot gắp chip
-          [5.0, 0, 1.8, 3.0],  // Ngắm bảng hiệu đèn neon
-          [5.5, 0, 4.5, 1.0],
-          [5.5, 0, -2.5, 1.0]
+          [10.5, 0, -4.5, 2.0], // Đi trên vỉa hè bên phải
+          [10.5, 0, 1.5, 4.0], // Dừng lại ngắm đồ Cyberpunk qua cửa kính
+          [10.5, 0, 8.5, 3.0],  // Đi ra góc vỉa hè ngắm cây hoa anh đào
+          [2.0, 0, 8.5, 4.0],   // Đi dọc vỉa hè trước ngắm robot & địa cầu
+          [10.5, 0, -4.5, 2.0]
         ]}
         onSelect={onSelect}
         info={{

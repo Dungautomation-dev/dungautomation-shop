@@ -1,8 +1,15 @@
 import React, { useMemo } from 'react'
 import * as THREE from 'three'
 
+/**
+ * Kiến Trúc Showroom Mở Rộng DungAutomation (Store Architecture)
+ * - Tường sau & tường trái ốp lam gỗ tuyết tùng (Cedar acoustic slats) sang trọng
+ * - Khung dầm thép đen & giàn Pergola mở thoáng khí chuẩn kiến trúc diorama
+ * - Bảng hiệu Dateco & Dũng Automation siêu nét, không bị lóa
+ * - Đèn rọi spotlight ấm 3000K
+ */
 export function StoreArchitecture({ isNight }) {
-  // Biển hiệu Dũng Automation độ phân giải cao 2048x400 siêu sắc nét, KHÔNG BỊ LÓA
+  // Biển hiệu Dũng Automation độ phân giải cao 2048x420 siêu sắc nét, KHÔNG BỊ LÓA
   const signboardTex = useMemo(() => {
     const cvs = document.createElement('canvas')
     cvs.width = 2048
@@ -23,13 +30,13 @@ export function StoreArchitecture({ isNight }) {
 
     // Huy hiệu Dateco góc trái và phải
     ctx.fillStyle = '#0284c7'
-    ctx.fillRect(50, 45, 130, 36)
-    ctx.fillRect(1868, 45, 130, 36)
+    ctx.fillRect(50, 45, 140, 38)
+    ctx.fillRect(1858, 45, 140, 38)
     ctx.fillStyle = '#ffffff'
-    ctx.font = 'bold 20px "Segoe UI", sans-serif'
+    ctx.font = 'bold 22px "Segoe UI", sans-serif'
     ctx.textAlign = 'center'
-    ctx.fillText('DATECO', 115, 70)
-    ctx.fillText('DATECO', 1933, 70)
+    ctx.fillText('DATECO', 120, 72)
+    ctx.fillText('DATECO', 1928, 72)
 
     // Dòng chữ thương hiệu chính: ⚡ DŨNG AUTOMATION ⚡
     ctx.textAlign = 'center'
@@ -47,8 +54,8 @@ export function StoreArchitecture({ isNight }) {
     ctx.strokeStyle = '#f59e0b'
     ctx.lineWidth = 3
     ctx.beginPath()
-    ctx.moveTo(320, 215)
-    ctx.lineTo(1728, 215)
+    ctx.moveTo(300, 215)
+    ctx.lineTo(1748, 215)
     ctx.stroke()
 
     // Khẩu hiệu chính thức: "Chia sẻ để thành công"
@@ -69,39 +76,39 @@ export function StoreArchitecture({ isNight }) {
 
   return (
     <group position={[0, 0, 0]}>
-      {/* ================= 1. TƯỜNG SAU & TƯỜNG TRÁI (KIẾN TRÚC MẶT CẮT DIORAMA) ================= */}
+      {/* ================= 1. TƯỜNG SAU & TƯỜNG TRÁI (KIẾN TRÚC MẶT CẮT DIORAMA MỞ RỘNG 21x19m) ================= */}
       {/* Tường sau (Back Wall) - màu xám than kiến trúc */}
-      <mesh position={[-1.5, 3.8, -9.0]} receiveShadow castShadow>
-        <boxGeometry args={[15.2, 7.6, 0.4]} />
+      <mesh position={[-1.0, 3.8, -11.5]} receiveShadow castShadow>
+        <boxGeometry args={[21.2, 7.6, 0.4]} />
         <meshStandardMaterial color="#1a202c" roughness={0.75} metalness={0.15} />
       </mesh>
 
       {/* Tường bên trái (Left Wall) */}
-      <mesh position={[-9.0, 3.8, -1.5]} receiveShadow castShadow>
-        <boxGeometry args={[0.4, 7.6, 15.2]} />
+      <mesh position={[-11.5, 3.8, -2.0]} receiveShadow castShadow>
+        <boxGeometry args={[0.4, 7.6, 19.2]} />
         <meshStandardMaterial color="#1a202c" roughness={0.75} metalness={0.15} />
       </mesh>
 
       {/* ================= 2. LAM GỖ TUYẾT TÙNG CAO CẤP (CEDAR ACOUSTIC SLATS) ================= */}
       {/* Lam gỗ ốp tường sau tạo cảm giác ấm cúng, sang trọng như showroom Apple */}
-      {Array.from({ length: 16 }).map((_, i) => (
-        <mesh key={`back-${i}`} position={[-7.5 + i * 0.8, 3.8, -8.76]} castShadow>
-          <boxGeometry args={[0.35, 7.2, 0.08]} />
+      {Array.from({ length: 27 }).map((_, i) => (
+        <mesh key={`back-${i}`} position={[-10.6 + i * 0.74, 3.8, -11.26]} castShadow>
+          <boxGeometry args={[0.34, 7.2, 0.08]} />
           <meshStandardMaterial color="#854d0e" roughness={0.6} metalness={0.05} />
         </mesh>
       ))}
 
       {/* Lam gỗ tường trái */}
-      {Array.from({ length: 16 }).map((_, i) => (
-        <mesh key={`left-${i}`} position={[-8.76, 3.8, -7.5 + i * 0.8]} castShadow>
-          <boxGeometry args={[0.08, 7.2, 0.35]} />
+      {Array.from({ length: 24 }).map((_, i) => (
+        <mesh key={`left-${i}`} position={[-11.26, 3.8, -10.6 + i * 0.74]} castShadow>
+          <boxGeometry args={[0.08, 7.2, 0.34]} />
           <meshStandardMaterial color="#854d0e" roughness={0.6} metalness={0.05} />
         </mesh>
       ))}
 
       {/* Dải LED hắt khe tường trên cùng (Wall Wash Downlight Strip) */}
-      <mesh position={[-1.5, 7.3, -8.6]}>
-        <boxGeometry args={[14.8, 0.04, 0.04]} />
+      <mesh position={[-1.0, 7.3, -11.1]}>
+        <boxGeometry args={[20.6, 0.04, 0.04]} />
         <meshStandardMaterial
           color="#ffedd5"
           emissive="#fed7aa"
@@ -111,43 +118,67 @@ export function StoreArchitecture({ isNight }) {
       </mesh>
 
       {/* ================= 3. KHUNG DẦM THÉP ĐEN & MÁI PERGOLA MỞ (OPEN TRELLIS BEAMS) ================= */}
-      {/* Dầm thép chạy dọc đỉnh tường sau */}
-      <mesh position={[-1.5, 7.5, -8.8]} castShadow>
-        <boxGeometry args={[15.2, 0.3, 0.3]} />
+      {/* Dầm thép đỉnh tường sau */}
+      <mesh position={[-1.0, 7.5, -11.3]} castShadow>
+        <boxGeometry args={[21.2, 0.3, 0.3]} />
         <meshStandardMaterial color="#0f172a" roughness={0.3} metalness={0.8} />
       </mesh>
 
       {/* Dầm thép đỉnh tường trái */}
-      <mesh position={[-8.8, 7.5, -1.5]} castShadow>
-        <boxGeometry args={[0.3, 0.3, 15.2]} />
+      <mesh position={[-11.3, 7.5, -2.0]} castShadow>
+        <boxGeometry args={[0.3, 0.3, 19.2]} />
+        <meshStandardMaterial color="#0f172a" roughness={0.3} metalness={0.8} />
+      </mesh>
+
+      {/* Dầm thép viền trần phía trước (Front Trellis Beam) */}
+      <mesh position={[-1.0, 7.5, 7.3]} castShadow>
+        <boxGeometry args={[21.2, 0.3, 0.3]} />
+        <meshStandardMaterial color="#0f172a" roughness={0.3} metalness={0.8} />
+      </mesh>
+
+      {/* Dầm thép viền trần bên phải (Right Trellis Beam) */}
+      <mesh position={[9.3, 7.5, -2.0]} castShadow>
+        <boxGeometry args={[0.3, 0.3, 19.2]} />
         <meshStandardMaterial color="#0f172a" roughness={0.3} metalness={0.8} />
       </mesh>
 
       {/* Các thanh giàn Pergola thoáng khí đón ánh sáng studio, KHÔNG BỊ BÍT KÍN NHƯ HỘP TỐI */}
-      {Array.from({ length: 6 }).map((_, i) => (
-        <mesh key={`pergola-${i}`} position={[-6.5 + i * 2.2, 7.55, -4.5]} castShadow>
-          <boxGeometry args={[0.15, 0.25, 8.5]} />
+      {Array.from({ length: 9 }).map((_, i) => (
+        <mesh key={`pergola-${i}`} position={[-8.8 + i * 2.2, 7.55, -2.0]} castShadow>
+          <boxGeometry args={[0.15, 0.25, 18.6]} />
           <meshStandardMaterial color="#1e293b" roughness={0.4} metalness={0.7} />
         </mesh>
       ))}
 
       {/* Cột góc sau trái */}
-      <mesh position={[-8.8, 3.8, -8.8]} castShadow>
+      <mesh position={[-11.3, 3.8, -11.3]} castShadow>
+        <boxGeometry args={[0.4, 7.6, 0.4]} />
+        <meshStandardMaterial color="#0f172a" roughness={0.3} metalness={0.8} />
+      </mesh>
+
+      {/* Cột góc sau phải */}
+      <mesh position={[9.3, 3.8, -11.3]} castShadow>
+        <boxGeometry args={[0.4, 7.6, 0.4]} />
+        <meshStandardMaterial color="#0f172a" roughness={0.3} metalness={0.8} />
+      </mesh>
+
+      {/* Cột góc trước trái */}
+      <mesh position={[-11.3, 3.8, 7.3]} castShadow>
         <boxGeometry args={[0.4, 7.6, 0.4]} />
         <meshStandardMaterial color="#0f172a" roughness={0.3} metalness={0.8} />
       </mesh>
 
       {/* ================= 4. BẢNG HIỆU DATECO & DŨNG AUTOMATION NÉT ĐẸP KHÔNG LÓA ================= */}
-      <group position={[-1.5, 6.2, -8.6]}>
+      <group position={[-1.0, 6.2, -11.05]}>
         {/* Nền khung kim loại sang trọng */}
         <mesh position={[0, 0, 0]} castShadow>
-          <boxGeometry args={[11.2, 1.8, 0.08]} />
+          <boxGeometry args={[14.5, 1.85, 0.08]} />
           <meshStandardMaterial color="#0b0f19" roughness={0.3} metalness={0.8} />
         </mesh>
 
         {/* Mặt bảng hiệu siêu nét, không bị lóa (toneMapped=true, balanced emissive) */}
         <mesh position={[0, 0, 0.05]}>
-          <planeGeometry args={[11.0, 1.7]} />
+          <planeGeometry args={[14.3, 1.75]} />
           <meshStandardMaterial
             map={signboardTex}
             emissiveMap={signboardTex}
@@ -161,30 +192,32 @@ export function StoreArchitecture({ isNight }) {
       </group>
 
       {/* ================= 5. ĐÈN RỌI SPOTLIGHT ÂM TRẦN WARM 3000K ================= */}
-      {[-5, 0, 4].map((lx, ix) => (
-        <group key={ix} position={[lx, 7.4, -2.5]}>
-          <mesh>
-            <cylinderGeometry args={[0.16, 0.16, 0.1, 16]} />
-            <meshStandardMaterial color="#0f172a" metalness={0.8} />
-          </mesh>
-          <mesh position={[0, -0.06, 0]}>
-            <sphereGeometry args={[0.08, 12, 12]} />
-            <meshStandardMaterial
-              color="#fffbeb"
-              emissive="#fef3c7"
-              emissiveIntensity={isNight ? 2.2 : 1.2}
-              toneMapped={false}
+      {[-7.0, -2.5, 2.0, 6.5].map((lx, ix) =>
+        [-6.5, -2.0, 2.5].map((lz, iz) => (
+          <group key={`${ix}-${iz}`} position={[lx, 7.4, lz]}>
+            <mesh>
+              <cylinderGeometry args={[0.16, 0.16, 0.1, 16]} />
+              <meshStandardMaterial color="#0f172a" metalness={0.8} />
+            </mesh>
+            <mesh position={[0, -0.06, 0]}>
+              <sphereGeometry args={[0.08, 12, 12]} />
+              <meshStandardMaterial
+                color="#fffbeb"
+                emissive="#fef3c7"
+                emissiveIntensity={isNight ? 2.0 : 1.1}
+                toneMapped={false}
+              />
+            </mesh>
+            <pointLight
+              position={[0, -0.2, 0]}
+              color="#ffeedd"
+              intensity={isNight ? 1.6 : 0.9}
+              distance={9}
+              decay={2}
             />
-          </mesh>
-          <pointLight
-            position={[0, -0.2, 0]}
-            color="#ffeedd"
-            intensity={isNight ? 2.2 : 1.2}
-            distance={10}
-            decay={2}
-          />
-        </group>
-      ))}
+          </group>
+        ))
+      )}
     </group>
   )
 }
