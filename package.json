@@ -1,0 +1,42 @@
+{
+  "name": "dungautomation-shop",
+  "version": "1.0.0",
+  "description": "DungAutomation 3D Isometric Electronics Store - R3F, Drei, Post-Processing Architectural Diorama",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Dungautomation-dev/dungautomation-shop.git"
+  },
+  "keywords": [
+    "react-three-fiber",
+    "threejs",
+    "drei",
+    "postprocessing",
+    "diorama",
+    "electronics",
+    "plc",
+    "arduino",
+    "esp32",
+    "automation"
+  ],
+  "author": "Dung Automation",
+  "license": "MIT",
+  "homepage": "https://dungautomation-dev.github.io/dungautomation-shop/",
+  "dependencies": {
+    "@react-three/drei": "^10.7.9",
+    "@react-three/fiber": "^9.8.1",
+    "@react-three/postprocessing": "^3.1.3",
+    "@vitejs/plugin-react": "^6.1.2",
+    "canvas-confetti": "^1.9.4",
+    "postprocessing": "^6.39.5",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "three": "^0.186.1",
+    "vite": "^8.3.4"
+  }
+}
