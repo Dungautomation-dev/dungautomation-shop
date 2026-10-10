@@ -41,72 +41,77 @@ export default function LightingAndPostFx({
 
   return (
     <>
-      {/* ================= STUDIO ARCHITECTURAL LIGHTING RIG (KHỬ CHÓI MẮT) ================= */}
-      {/* Ambient Fill Light */}
+      {/* ================= SUNNY LOW-POLY DAYLIGHT RIG (CHUẨN ĐỒ HỌA ẢNH THAM KHẢO) ================= */}
+      {/* Ambient Fill Light - Sáng rõ toàn diện, không bị tối đen */}
       <ambientLight
-        intensity={(isNightMode ? 0.3 : 0.55) * lightBrightness}
-        color={isNightMode ? '#1e293b' : sunColor}
+        intensity={(isNightMode ? 0.35 : 0.95) * lightBrightness}
+        color={isNightMode ? '#1e293b' : '#ffffff'}
       />
 
-      {/* Main Key Sun Light with Soft Architectural Shadows */}
+      {/* Ánh sáng bán cầu (Hemisphere Light) mô phỏng bầu trời xanh & mặt đất ấm */}
+      <hemisphereLight
+        skyColor={isNightMode ? '#1e293b' : '#bae6fd'}
+        groundColor={isNightMode ? '#0f172a' : '#fef08a'}
+        intensity={(isNightMode ? 0.25 : 0.75) * lightBrightness}
+      />
+
+      {/* Ánh sáng Mặt Trời rực rỡ buổi sáng/trưa (Key Sunlight with Soft Shadows) */}
       <directionalLight
-        position={[14, 18, 12]}
-        intensity={(isNightMode ? 0.3 : 1.1) * lightBrightness}
-        color={sunColor}
+        position={[22, 32, 18]}
+        intensity={(isNightMode ? 0.3 : 2.2) * lightBrightness}
+        color={isNightMode ? '#38bdf8' : '#fffbeb'}
         castShadow
         shadow-mapSize-width={2048}
         shadow-mapSize-height={2048}
         shadow-camera-near={0.5}
-        shadow-camera-far={45}
-        shadow-camera-left={-13}
-        shadow-camera-right={13}
-        shadow-camera-top={13}
-        shadow-camera-bottom={-13}
+        shadow-camera-far={65}
+        shadow-camera-left={-22}
+        shadow-camera-right={22}
+        shadow-camera-top={22}
+        shadow-camera-bottom={-22}
         shadow-bias={-0.00015}
       />
 
-      {/* Cool Sky Counter Fill */}
+      {/* Ánh sáng bầu trời phản xạ ngược (Sky Fill) */}
       <directionalLight
-        position={[-12, 14, -10]}
-        intensity={0.3 * lightBrightness}
+        position={[-18, 20, -16]}
+        intensity={(isNightMode ? 0.2 : 0.6) * lightBrightness}
         color={skyColor}
       />
 
-      {/* Warm Showroom Interior Ceiling Downlight (Cường độ dịu mát không gây chói lóa) */}
+      {/* Đèn trung tâm Showroom tỏa sáng ấm cúng */}
       <pointLight
-        position={[-1.5, 4.2, -1.5]}
-        intensity={(isNightMode ? 1.8 : 1.0) * lightBrightness}
+        position={[-1.0, 5.0, -2.0]}
+        intensity={(isNightMode ? 2.0 : 1.2) * lightBrightness}
         color="#fed7aa"
-        distance={12}
+        distance={18}
         decay={2}
       />
 
-      {/* Drei HDRI Environment for PBR Reflections */}
-      <Environment preset={envPreset} environmentIntensity={(isNightMode ? 0.2 : 0.45) * lightBrightness} />
+      {/* Drei HDRI Environment cho phản quang PBR tự nhiên */}
+      <Environment preset={envPreset} environmentIntensity={(isNightMode ? 0.25 : 0.55) * lightBrightness} />
 
-      {/* Soft Contact Shadows below Diorama Plinth Base */}
+      {/* Bóng tiếp xúc mềm bên dưới khối đế (Contact Shadows) */}
       <ContactShadows
         position={[0, -1.41, 0]}
-        opacity={isNightMode ? 0.75 : 0.45}
-        scale={24}
-        blur={2.2}
-        far={6}
+        opacity={isNightMode ? 0.7 : 0.35}
+        scale={40}
+        blur={2.4}
+        far={8}
         resolution={1024}
-        color="#090d16"
+        color="#1e293b"
       />
 
-      {/* Cinematic Post-Processing Pipeline (Bloom + Vignette) */}
+      {/* Hậu kỳ Bloom nhẹ nhàng, KHÔNG DÙNG VIGNETTE ĐEN gây tối mờ */}
       <EffectComposer disableNormalPass multisampling={4}>
-        {/* Chỉ phát sáng vật thể có luminanceThreshold cao, KHÔNG làm lóa mặt sàn! */}
         {bloomIntensity > 0 && (
           <Bloom
-            luminanceThreshold={0.95}
+            luminanceThreshold={0.96}
             luminanceSmoothing={0.2}
-            intensity={bloomIntensity}
+            intensity={bloomIntensity * 0.5}
             mipmapBlur
           />
         )}
-        <Vignette eskil={false} offset={0.28} darkness={0.42} />
       </EffectComposer>
     </>
   )

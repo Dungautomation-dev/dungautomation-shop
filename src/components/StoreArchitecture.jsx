@@ -117,38 +117,18 @@ export function StoreArchitecture({ isNight }) {
         />
       </mesh>
 
-      {/* ================= 3. KHUNG DẦM THÉP ĐEN & MÁI PERGOLA MỞ (OPEN TRELLIS BEAMS) ================= */}
-      {/* Dầm thép đỉnh tường sau */}
+      {/* ================= 3. KHUNG DẦM THÉP VIỀN TƯỜNG (HOÀN TOÀN MỞ TRẦN THÔNG THOÁNG) ================= */}
+      {/* Dầm thép nẹp trên đỉnh tường sau */}
       <mesh position={[-1.0, 7.5, -11.3]} castShadow>
         <boxGeometry args={[21.2, 0.3, 0.3]} />
         <meshStandardMaterial color="#0f172a" roughness={0.3} metalness={0.8} />
       </mesh>
 
-      {/* Dầm thép đỉnh tường trái */}
+      {/* Dầm thép nẹp trên đỉnh tường trái */}
       <mesh position={[-11.3, 7.5, -2.0]} castShadow>
         <boxGeometry args={[0.3, 0.3, 19.2]} />
         <meshStandardMaterial color="#0f172a" roughness={0.3} metalness={0.8} />
       </mesh>
-
-      {/* Dầm thép viền trần phía trước (Front Trellis Beam) */}
-      <mesh position={[-1.0, 7.5, 7.3]} castShadow>
-        <boxGeometry args={[21.2, 0.3, 0.3]} />
-        <meshStandardMaterial color="#0f172a" roughness={0.3} metalness={0.8} />
-      </mesh>
-
-      {/* Dầm thép viền trần bên phải (Right Trellis Beam) */}
-      <mesh position={[9.3, 7.5, -2.0]} castShadow>
-        <boxGeometry args={[0.3, 0.3, 19.2]} />
-        <meshStandardMaterial color="#0f172a" roughness={0.3} metalness={0.8} />
-      </mesh>
-
-      {/* Các thanh giàn Pergola thoáng khí đón ánh sáng studio, KHÔNG BỊ BÍT KÍN NHƯ HỘP TỐI */}
-      {Array.from({ length: 9 }).map((_, i) => (
-        <mesh key={`pergola-${i}`} position={[-8.8 + i * 2.2, 7.55, -2.0]} castShadow>
-          <boxGeometry args={[0.15, 0.25, 18.6]} />
-          <meshStandardMaterial color="#1e293b" roughness={0.4} metalness={0.7} />
-        </mesh>
-      ))}
 
       {/* Cột góc sau trái */}
       <mesh position={[-11.3, 3.8, -11.3]} castShadow>
@@ -158,6 +138,12 @@ export function StoreArchitecture({ isNight }) {
 
       {/* Cột góc sau phải */}
       <mesh position={[9.3, 3.8, -11.3]} castShadow>
+        <boxGeometry args={[0.4, 7.6, 0.4]} />
+        <meshStandardMaterial color="#0f172a" roughness={0.3} metalness={0.8} />
+      </mesh>
+
+      {/* Cột góc trước trái */}
+      <mesh position={[-11.3, 3.8, 7.3]} castShadow>
         <boxGeometry args={[0.4, 7.6, 0.4]} />
         <meshStandardMaterial color="#0f172a" roughness={0.3} metalness={0.8} />
       </mesh>
@@ -191,33 +177,38 @@ export function StoreArchitecture({ isNight }) {
         </mesh>
       </group>
 
-      {/* ================= 5. ĐÈN RỌI SPOTLIGHT ÂM TRẦN WARM 3000K ================= */}
-      {[-7.0, -2.5, 2.0, 6.5].map((lx, ix) =>
-        [-6.5, -2.0, 2.5].map((lz, iz) => (
-          <group key={`${ix}-${iz}`} position={[lx, 7.4, lz]}>
-            <mesh>
-              <cylinderGeometry args={[0.16, 0.16, 0.1, 16]} />
-              <meshStandardMaterial color="#0f172a" metalness={0.8} />
-            </mesh>
-            <mesh position={[0, -0.06, 0]}>
-              <sphereGeometry args={[0.08, 12, 12]} />
-              <meshStandardMaterial
-                color="#fffbeb"
-                emissive="#fef3c7"
-                emissiveIntensity={isNight ? 2.0 : 1.1}
-                toneMapped={false}
-              />
-            </mesh>
-            <pointLight
-              position={[0, -0.2, 0]}
-              color="#ffeedd"
-              intensity={isNight ? 1.6 : 0.9}
-              distance={9}
-              decay={2}
-            />
-          </group>
-        ))
-      )}
+      {/* ================= 5. ĐÈN RỌI TRACK LIGHT GẮN TRÊN DẦM TƯỜNG (WARM WALL WASH) ================= */}
+      {[-8.0, -4.0, 0, 4.0, 7.0].map((lx, ix) => (
+        <group key={`back-spot-${ix}`} position={[lx, 7.35, -11.1]}>
+          <mesh>
+            <cylinderGeometry args={[0.12, 0.12, 0.14, 16]} />
+            <meshStandardMaterial color="#0f172a" metalness={0.8} />
+          </mesh>
+          <pointLight
+            position={[0, -0.3, 0.5]}
+            color="#ffeedd"
+            intensity={isNight ? 2.0 : 1.2}
+            distance={10}
+            decay={2}
+          />
+        </group>
+      ))}
+
+      {[-8.0, -4.0, 0, 4.0].map((lz, iz) => (
+        <group key={`left-spot-${iz}`} position={[-11.1, 7.35, lz]}>
+          <mesh>
+            <cylinderGeometry args={[0.12, 0.12, 0.14, 16]} />
+            <meshStandardMaterial color="#0f172a" metalness={0.8} />
+          </mesh>
+          <pointLight
+            position={[0.5, -0.3, 0]}
+            color="#ffeedd"
+            intensity={isNight ? 2.0 : 1.2}
+            distance={10}
+            decay={2}
+          />
+        </group>
+      ))}
     </group>
   )
 }

@@ -235,15 +235,21 @@ export default function CanvasScene({
   return (
     <Canvas
       shadows
-      camera={{ position: [22, 19, 24], fov: 36, near: 0.1, far: 120 }}
+      camera={{ position: [22, 19, 24], fov: 36, near: 0.1, far: 140 }}
       gl={{
         antialias: true,
         powerPreference: 'high-performance',
         toneMapping: THREE.ACESFilmicToneMapping,
-        toneMappingExposure: 1.05
+        toneMappingExposure: isNightMode ? 0.95 : 1.15
       }}
       style={{ width: '100%', height: '100%' }}
     >
+      {/* Màu nền bầu trời xanh nắng ấm buổi sáng (Sunny Sky Blue Background) */}
+      <color attach="background" args={[isNightMode ? '#0b1120' : '#a0d8ef']} />
+
+      {/* Sương mù chiều sâu hòa sắc với bầu trời xa */}
+      <fog attach="fog" args={[isNightMode ? '#0b1120' : '#bfe3f7', 50, 110]} />
+
       {/* Interactive Orbit Camera Controls */}
       <OrbitControls
         ref={controlsRef}
