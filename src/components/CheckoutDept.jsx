@@ -1,16 +1,6 @@
-import React, { useRef } from 'react'
-import { useFrame } from '@react-three/fiber'
-import { Html } from '@react-three/drei'
+import React from 'react'
 
 export default function CheckoutDept({ onSelect }) {
-  const parcelRef = useRef()
-
-  useFrame((state) => {
-    if (parcelRef.current) {
-      // Gentle floating indicator over checkout
-      parcelRef.current.position.y = 2.2 + Math.sin(state.clock.elapsedTime * 2.5) * 0.08
-    }
-  })
 
   return (
     <group position={[1.8, 0, 4.2]}>
@@ -157,16 +147,6 @@ export default function CheckoutDept({ onSelect }) {
             <planeGeometry args={[0.12, 0.08]} />
             <meshStandardMaterial color="#ffffff" roughness={0.5} />
           </mesh>
-        </group>
-
-        {/* Hover tag above checkout */}
-        <group ref={parcelRef}>
-          <Html position={[0, 0, 0]} center distanceFactor={14}>
-            <div className="hud-3d-tag" style={{ borderLeftColor: '#10b981' }}>
-              <div className="hud-tag-title">⚡ QUẦY THU NGÂN</div>
-              <div className="hud-tag-sub">Giao Hoả Tốc 1h</div>
-            </div>
-          </Html>
         </group>
       </group>
 

@@ -72,8 +72,13 @@ const DEPT_CATALOG = {
 function CameraDirector({ preset, controlsRef }) {
   const targetCamPos = useRef(new THREE.Vector3(18, 16, 20))
   const targetLookAt = useRef(new THREE.Vector3(0, 1.5, 0))
+  const isTransitioning = useRef(false)
+  const lastPreset = useRef(null)
 
   useEffect(() => {
+    if (preset === lastPreset.current) return
+    lastPreset.current = preset
+
     switch (preset) {
       case 'plc':
         targetCamPos.current.set(-1.5, 5.5, 3.5)
@@ -101,15 +106,39 @@ function CameraDirector({ preset, controlsRef }) {
         targetLookAt.current.set(0, 1.5, 0)
         break
     }
+    isTransitioning.current = true
   }, [preset])
 
+  // Stop auto-transition as soon as the user starts interacting with mouse/touch!
+  useEffect(() => {
+    const controls = controlsRef.current
+    if (!controls) return
+
+    const onUserInteraction = () => {
+      isTransitioning.current = false
+    }
+
+    controls.addEventListener('start', onUserInteraction)
+    return () => {
+      controls.removeEventListener('start', onUserInteraction)
+    }
+  }, [controlsRef])
+
   useFrame((state, delta) => {
-    if (!controlsRef.current) return
+    if (!isTransitioning.current || !controlsRef.current) return
     const camera = state.camera
 
     camera.position.lerp(targetCamPos.current, delta * 3.5)
     controlsRef.current.target.lerp(targetLookAt.current, delta * 3.5)
     controlsRef.current.update()
+
+    const distPos = camera.position.distanceTo(targetCamPos.current)
+    const distTarget = controlsRef.current.target.distanceTo(targetLookAt.current)
+
+    // Once reached close to target, stop fighting user input!
+    if (distPos < 0.08 && distTarget < 0.08) {
+      isTransitioning.current = false
+    }
   })
 
   return null

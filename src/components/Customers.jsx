@@ -1,32 +1,33 @@
-import React, { useRef, useMemo } from 'react'
+import React, { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 
-// Stylized cute humanoid character component with animated limbs
-function StylizedCharacter({
+// Stylized Architectural Diorama Humanoid Character (Chuẩn nhân vật kiến trúc nghệ thuật)
+function DioramaCharacter({
   initialPos = [0, 0, 0],
-  colorBody = '#3b82f6',
-  colorHair = '#1c1917',
-  colorPants = '#1f2937',
-  hasCap = false,
-  hasBackpack = false,
+  jacketColor = '#2563eb',
+  pantsColor = '#1f2937',
+  hairColor = '#18181b',
+  hasTablet = false,
+  hasBag = false,
+  hasHelmet = false,
   waypoints = [],
-  speed = 1.2,
+  speed = 1.0,
   onSelect,
   info
 }) {
-  const groupRef = useRef()
+  const rootRef = useRef()
+  const bodyRef = useRef()
   const leftLegRef = useRef()
   const rightLegRef = useRef()
   const leftArmRef = useRef()
   const rightArmRef = useRef()
-  const currentWaypointIndex = useRef(0)
+  const currentWp = useRef(0)
   const waitTimer = useRef(0)
   const isWalking = useRef(true)
 
-  // Waypoints loop
   useFrame((state, delta) => {
-    if (!groupRef.current) return
+    if (!rootRef.current) return
     const time = state.clock.elapsedTime
 
     if (waypoints.length > 1) {
@@ -35,50 +36,54 @@ function StylizedCharacter({
         isWalking.current = false
       } else {
         isWalking.current = true
-        const target = waypoints[currentWaypointIndex.current]
-        const currentPos = groupRef.current.position
+        const target = waypoints[currentWp.current]
+        const currentPos = rootRef.current.position
         const dir = new THREE.Vector3(target[0] - currentPos.x, 0, target[2] - currentPos.z)
         const dist = dir.length()
 
-        if (dist < 0.15) {
-          // Reached waypoint, pause for 2.5s to browse/shop
-          waitTimer.current = target[3] || 2.0
-          currentWaypointIndex.current = (currentWaypointIndex.current + 1) % waypoints.length
+        if (dist < 0.18) {
+          waitTimer.current = target[3] || 2.5
+          currentWp.current = (currentWp.current + 1) % waypoints.length
         } else {
           dir.normalize()
-          groupRef.current.position.x += dir.x * speed * delta
-          groupRef.current.position.z += dir.z * speed * delta
+          rootRef.current.position.x += dir.x * speed * delta
+          rootRef.current.position.z += dir.z * speed * delta
 
-          // Smoothly rotate towards direction
           const targetAngle = Math.atan2(dir.x, dir.z)
-          groupRef.current.rotation.y = THREE.MathUtils.lerp(
-            groupRef.current.rotation.y,
+          rootRef.current.rotation.y = THREE.MathUtils.lerp(
+            rootRef.current.rotation.y,
             targetAngle,
-            delta * 8
+            delta * 7
           )
         }
       }
     }
 
-    // Walking leg/arm swing cycle
+    // Walking animation
     if (isWalking.current) {
-      const swing = Math.sin(time * speed * 7) * 0.45
+      const swing = Math.sin(time * speed * 6.5) * 0.4
       if (leftLegRef.current) leftLegRef.current.rotation.x = swing
       if (rightLegRef.current) rightLegRef.current.rotation.x = -swing
-      if (leftArmRef.current) leftArmRef.current.rotation.x = -swing * 0.8
-      if (rightArmRef.current) rightArmRef.current.rotation.x = swing * 0.8
+      if (leftArmRef.current) leftArmRef.current.rotation.x = -swing * 0.7
+      if (rightArmRef.current) rightArmRef.current.rotation.x = swing * 0.7
+
+      // Nhấp nhô bước chân (Natural vertical bobbing)
+      if (bodyRef.current) {
+        bodyRef.current.position.y = 0.03 * Math.abs(Math.sin(time * speed * 6.5))
+      }
     } else {
-      // Idle breathing
+      // Idle pose
       if (leftLegRef.current) leftLegRef.current.rotation.x = 0
       if (rightLegRef.current) rightLegRef.current.rotation.x = 0
-      if (leftArmRef.current) leftArmRef.current.rotation.x = Math.sin(time * 2) * 0.05
-      if (rightArmRef.current) rightArmRef.current.rotation.x = -Math.sin(time * 2) * 0.05
+      if (leftArmRef.current) leftArmRef.current.rotation.x = Math.sin(time * 1.8) * 0.04
+      if (rightArmRef.current) rightArmRef.current.rotation.x = -Math.sin(time * 1.8) * 0.04
+      if (bodyRef.current) bodyRef.current.position.y = Math.sin(time * 2) * 0.015
     }
   })
 
   return (
     <group
-      ref={groupRef}
+      ref={rootRef}
       position={initialPos}
       onClick={(e) => {
         e.stopPropagation()
@@ -86,241 +91,269 @@ function StylizedCharacter({
       }}
       cursor="pointer"
     >
-      {/* Head */}
-      <mesh position={[0, 1.48, 0]} castShadow>
-        <sphereGeometry args={[0.16, 16, 16]} />
-        <meshStandardMaterial color="#fcd34d" roughness={0.5} />
-      </mesh>
-
-      {/* Hair / Cap */}
-      {hasCap ? (
-        <group position={[0, 1.58, 0]}>
+      <group ref={bodyRef}>
+        {/* ================= ĐẦU VÀ TÓC NGHỆ THUẬT ================= */}
+        <group position={[0, 1.52, 0]}>
+          {/* Khuôn mặt thanh tú */}
           <mesh castShadow>
-            <cylinderGeometry args={[0.17, 0.17, 0.08, 16]} />
-            <meshStandardMaterial color="#ef4444" roughness={0.6} />
+            <sphereGeometry args={[0.13, 18, 18]} />
+            <meshStandardMaterial color="#fcd34d" roughness={0.4} />
           </mesh>
-          {/* Cap visor bill */}
-          <mesh position={[0, -0.02, 0.16]} rotation={[0.2, 0, 0]} castShadow>
-            <boxGeometry args={[0.22, 0.03, 0.15]} />
-            <meshStandardMaterial color="#dc2626" />
+
+          {/* Mũ bảo hiểm hoặc tóc phong cách */}
+          {hasHelmet ? (
+            <mesh position={[0, 0.04, -0.01]} castShadow>
+              <sphereGeometry args={[0.15, 18, 18]} />
+              <meshStandardMaterial color="#ef4444" roughness={0.3} metalness={0.2} />
+            </mesh>
+          ) : (
+            <mesh position={[0, 0.05, -0.02]} castShadow>
+              <sphereGeometry args={[0.14, 18, 18]} />
+              <meshStandardMaterial color={hairColor} roughness={0.7} />
+            </mesh>
+          )}
+
+          {/* Cổ mảnh kết nối tự nhiên */}
+          <mesh position={[0, -0.12, 0]} castShadow>
+            <cylinderGeometry args={[0.04, 0.05, 0.08, 12]} />
+            <meshStandardMaterial color="#fcd34d" roughness={0.4} />
           </mesh>
         </group>
-      ) : (
-        <mesh position={[0, 1.56, -0.02]} castShadow>
-          <sphereGeometry args={[0.17, 16, 16]} />
-          <meshStandardMaterial color={colorHair} roughness={0.8} />
-        </mesh>
-      )}
 
-      {/* Torso / Jacket */}
-      <mesh position={[0, 1.05, 0]} castShadow>
-        <boxGeometry args={[0.34, 0.48, 0.22]} />
-        <meshStandardMaterial color={colorBody} roughness={0.6} />
-      </mesh>
+        {/* ================= THÂN TRÊN & ÁO KHOÁC THIẾT KẾ VÁT ================= */}
+        <group position={[0, 1.15, 0]}>
+          {/* Thân áo khoác thuôn nhẹ từ vai xuống eo */}
+          <mesh castShadow>
+            <cylinderGeometry args={[0.18, 0.14, 0.52, 16]} />
+            <meshStandardMaterial color={jacketColor} roughness={0.5} />
+          </mesh>
 
-      {/* Backpack if equipped */}
-      {hasBackpack && (
-        <mesh position={[0, 1.08, -0.16]} castShadow>
-          <boxGeometry args={[0.26, 0.36, 0.14]} />
-          <meshStandardMaterial color="#1e293b" roughness={0.8} />
-        </mesh>
-      )}
+          {/* Cổ áo polo/blazer */}
+          <mesh position={[0, 0.22, 0.06]}>
+            <boxGeometry args={[0.14, 0.06, 0.06]} />
+            <meshStandardMaterial color="#ffffff" roughness={0.8} />
+          </mesh>
 
-      {/* Left Arm */}
-      <group ref={leftArmRef} position={[-0.22, 1.22, 0]}>
-        <mesh position={[0, -0.2, 0]} castShadow>
-          <boxGeometry args={[0.09, 0.4, 0.09]} />
-          <meshStandardMaterial color={colorBody} />
-        </mesh>
-      </group>
+          {/* Túi đeo chéo / Balo nếu có */}
+          {hasBag && (
+            <mesh position={[0, -0.02, -0.14]} castShadow>
+              <boxGeometry args={[0.22, 0.26, 0.12]} />
+              <meshStandardMaterial color="#1e293b" roughness={0.7} />
+            </mesh>
+          )}
 
-      {/* Right Arm */}
-      <group ref={rightArmRef} position={[0.22, 1.22, 0]}>
-        <mesh position={[0, -0.2, 0]} castShadow>
-          <boxGeometry args={[0.09, 0.4, 0.09]} />
-          <meshStandardMaterial color={colorBody} />
-        </mesh>
-      </group>
+          {/* Tablet SCADA cầm trên tay kỹ sư phát sáng */}
+          {hasTablet && (
+            <group position={[0.22, -0.05, 0.2]} rotation={[0.4, -0.3, 0]}>
+              <mesh castShadow>
+                <boxGeometry args={[0.22, 0.15, 0.02]} />
+                <meshStandardMaterial color="#0f172a" metalness={0.8} roughness={0.2} />
+              </mesh>
+              {/* Màn hình SCADA thu nhỏ */}
+              <mesh position={[0, 0, 0.012]}>
+                <planeGeometry args={[0.2, 0.13]} />
+                <meshStandardMaterial
+                  color="#00f3ff"
+                  emissive="#00f3ff"
+                  emissiveIntensity={2}
+                  toneMapped={false}
+                />
+              </mesh>
+            </group>
+          )}
+        </group>
 
-      {/* Pelvis */}
-      <mesh position={[0, 0.74, 0]} castShadow>
-        <boxGeometry args={[0.32, 0.16, 0.2]} />
-        <meshStandardMaterial color={colorPants} />
-      </mesh>
+        {/* ================= TAY TRÁI & TAY PHẢI ================= */}
+        <group ref={leftArmRef} position={[-0.22, 1.34, 0]}>
+          <mesh position={[0, -0.22, 0]} castShadow>
+            <cylinderGeometry args={[0.04, 0.035, 0.44, 12]} />
+            <meshStandardMaterial color={jacketColor} />
+          </mesh>
+          <mesh position={[0, -0.46, 0]} castShadow>
+            <sphereGeometry args={[0.035, 10, 10]} />
+            <meshStandardMaterial color="#fcd34d" />
+          </mesh>
+        </group>
 
-      {/* Left Leg */}
-      <group ref={leftLegRef} position={[-0.1, 0.66, 0]}>
-        <mesh position={[0, -0.32, 0]} castShadow>
-          <boxGeometry args={[0.11, 0.64, 0.11]} />
-          <meshStandardMaterial color={colorPants} />
-        </mesh>
-        {/* Shoe */}
-        <mesh position={[0, -0.62, 0.04]} castShadow>
-          <boxGeometry args={[0.12, 0.08, 0.18]} />
-          <meshStandardMaterial color="#111827" />
-        </mesh>
-      </group>
+        <group ref={rightArmRef} position={[0.22, 1.34, 0]}>
+          <mesh position={[0, -0.22, 0]} castShadow>
+            <cylinderGeometry args={[0.04, 0.035, 0.44, 12]} />
+            <meshStandardMaterial color={jacketColor} />
+          </mesh>
+          <mesh position={[0, -0.46, 0]} castShadow>
+            <sphereGeometry args={[0.035, 10, 10]} />
+            <meshStandardMaterial color="#fcd34d" />
+          </mesh>
+        </group>
 
-      {/* Right Leg */}
-      <group ref={rightLegRef} position={[0.1, 0.66, 0]}>
-        <mesh position={[0, -0.32, 0]} castShadow>
-          <boxGeometry args={[0.11, 0.64, 0.11]} />
-          <meshStandardMaterial color={colorPants} />
+        {/* ================= HÔNG VÀ 2 CHÂN THUÔN DÀI ================= */}
+        {/* Hông */}
+        <mesh position={[0, 0.84, 0]} castShadow>
+          <cylinderGeometry args={[0.14, 0.13, 0.14, 16]} />
+          <meshStandardMaterial color={pantsColor} />
         </mesh>
-        {/* Shoe */}
-        <mesh position={[0, -0.62, 0.04]} castShadow>
-          <boxGeometry args={[0.12, 0.08, 0.18]} />
-          <meshStandardMaterial color="#111827" />
-        </mesh>
+
+        {/* Chân trái */}
+        <group ref={leftLegRef} position={[-0.08, 0.76, 0]}>
+          <mesh position={[0, -0.36, 0]} castShadow>
+            <cylinderGeometry args={[0.05, 0.04, 0.72, 12]} />
+            <meshStandardMaterial color={pantsColor} />
+          </mesh>
+          {/* Giày sneaker thanh lịch */}
+          <group position={[0, -0.74, 0.03]}>
+            <mesh castShadow>
+              <boxGeometry args={[0.09, 0.06, 0.18]} />
+              <meshStandardMaterial color="#f8fafc" />
+            </mesh>
+            <mesh position={[0, -0.025, 0]}>
+              <boxGeometry args={[0.095, 0.02, 0.19]} />
+              <meshStandardMaterial color="#0f172a" />
+            </mesh>
+          </group>
+        </group>
+
+        {/* Chân phải */}
+        <group ref={rightLegRef} position={[0.08, 0.76, 0]}>
+          <mesh position={[0, -0.36, 0]} castShadow>
+            <cylinderGeometry args={[0.05, 0.04, 0.72, 12]} />
+            <meshStandardMaterial color={pantsColor} />
+          </mesh>
+          {/* Giày sneaker */}
+          <group position={[0, -0.74, 0.03]}>
+            <mesh castShadow>
+              <boxGeometry args={[0.09, 0.06, 0.18]} />
+              <meshStandardMaterial color="#f8fafc" />
+            </mesh>
+            <mesh position={[0, -0.025, 0]}>
+              <boxGeometry args={[0.095, 0.02, 0.19]} />
+              <meshStandardMaterial color="#0f172a" />
+            </mesh>
+          </group>
+        </group>
       </group>
     </group>
   )
 }
 
-export default function Customers({ onSelect }) {
-  // Define 5 distinct dynamic characters in Hanoi DungAutomation Shop
+export function Customers({ onSelect }) {
   return (
     <group>
-      {/* 1. Maker Engineer browsing Arduino & ESP32 */}
-      <StylizedCharacter
-        initialPos={[-1.2, 0, 1.5]}
-        colorBody="#2563eb" // Blue hoodie
-        colorHair="#451a03"
-        colorPants="#374151"
-        hasBackpack={true}
-        speed={1.0}
-        waypoints={[
-          [-1.5, 0, 1.2, 4.0], // Staring at Arduino Uno shelf
-          [-2.2, 0, 2.0, 3.5], // Staring at ESP32-S3 shelf
-          [-0.8, 0, 2.5, 2.0], // Pondering
-          [-1.5, 0, 1.2, 4.0]
-        ]}
-        onSelect={onSelect}
-        info={{
-          id: 'customer-1',
-          title: 'Kỹ sư Hoàng Nam - Maker IoT Hà Nội',
-          category: 'Khách Hàng Thân Thiết',
-          price: 'Giỏ hàng dự kiến: 850.000 đ',
-          specs: [
-            'Đang tìm kiếm: ESP32-S3 N16R8 Dual Type-C & Màn hình tròn GC9A01',
-            'Mục đích: Dự án trạm quan trắc chất lượng không khí thông minh tại Cầu Giấy',
-            'Đánh giá shop: "DungAutomation có hàng chuẩn chính hãng, mạch hàn sạch đẹp 10/10!"'
-          ],
-          desc: 'Kỹ sư lập trình nhúng kỳ cựu đang chọn bo mạch vi điều khiển thế hệ mới hỗ trợ Wi-Fi & Bluetooth 5.0 để làm hệ thống Smart Home.'
-        }}
-      />
-
-      {/* 2. Senior Industrial Engineer inspecting Siemens S7-1200 */}
-      <StylizedCharacter
-        initialPos={[-3.0, 0, -2.0]}
-        colorBody="#475569" // Grey formal polo
-        colorHair="#1f2937"
-        colorPants="#0f172a"
+      {/* 1. Kỹ sư tự động hóa cầm tablet SCADA kiểm tra tủ PLC Siemens */}
+      <DioramaCharacter
+        initialPos={[-4.5, 0, -2.2]}
+        jacketColor="#0f766e" // Teal công nghiệp lịch sự
+        pantsColor="#1e293b"
+        hairColor="#1c1917"
+        hasTablet={true}
         speed={0.8}
         waypoints={[
-          [-3.2, 0, -2.2, 5.0], // Examining PLC cabinet
-          [-2.4, 0, -1.8, 3.0], // Checking Weintek HMI touch screen
-          [-3.0, 0, -2.8, 4.0]  // Reviewing 24VDC Industrial Power Supply
+          [-5.2, 0, -2.5, 6.0], // Đứng kiểm tra tủ PLC
+          [-3.8, 0, -2.0, 3.5], // Đối chiếu thông số HMI
+          [-2.2, 0, -2.5, 4.0], // Xem máy in 3D
+          [-5.2, 0, -2.5, 6.0]
         ]}
         onSelect={onSelect}
         info={{
-          id: 'customer-2',
-          title: 'Kỹ sư Trưởng Quốc Tuấn - Nhà Máy Tự Động Hoá KCN Bắc Ninh',
+          id: 'customer-engineer',
+          title: 'Kỹ Sư Trưởng Quốc Tuấn - Nhà Máy KCN Bắc Ninh',
           category: 'Khách Hàng Doanh Nghiệp (B2B)',
-          price: 'Hợp đồng dự án: 48.000.000 đ',
+          price: 'Hợp đồng dự án: 48.500.000 đ',
           specs: [
-            'Nhu cầu: 5x CPU Siemens S7-1200 1214C DC/DC/DC + Module Analog SM1231',
-            'Ứng dụng: Điều khiển dây chuyền đóng gói bao bì tự động và giám sát SCADA',
-            'Đánh giá: "Cần giao gấp trong chiều nay để lắp tủ điện bảo trì ca đêm!"'
+            'Nhu cầu: 5x Bộ CPU Siemens S7-1200 1214C + Module SM1231 Analog',
+            'Ứng dụng: Giám sát SCADA và điều khiển dây chuyền đóng gói tự động',
+            'Đang thực hiện: Cầm tablet kiểm tra kết nối mạng truyền thông PROFINET'
           ],
-          desc: 'Chuyên gia tự động hoá công nghiệp đang kiểm tra cấu hình phần cứng tủ PLC Siemens trước khi ký hợp đồng nhập số lượng lớn.'
+          desc: 'Kỹ sư tự động hóa đang thao tác trên tablet SCADA để kiểm tra tín hiệu xung của tủ điện trước khi ký hợp đồng nhập số lượng lớn.'
         }}
       />
 
-      {/* 3. Tech Student testing oscilloscope at MakerBench */}
-      <StylizedCharacter
-        initialPos={[1.0, 0, -2.2]}
-        colorBody="#059669" // Emerald green sweater
-        colorHair="#7c2d12"
-        colorPants="#1e293b"
+      {/* 2. Nữ Maker IoT đeo ba lô dạo quanh kệ ESP32-S3 */}
+      <DioramaCharacter
+        initialPos={[-4.5, 0, 1.8]}
+        jacketColor="#6366f1" // Tím Indigo hiện đại
+        pantsColor="#334155"
+        hairColor="#451a03"
+        hasBag={true}
         speed={0.9}
         waypoints={[
-          [1.0, 0, -2.2, 6.0], // Hands-on bench testing
-          [1.8, 0, -1.8, 2.5], // Watching 3D printer
-          [1.0, 0, -2.2, 6.0]
+          [-5.0, 0, 2.2, 5.0], // Ngắm nghía kệ ESP32-S3
+          [-3.5, 0, 1.5, 3.0], // Tìm kiếm cảm biến môi trường
+          [-4.5, 0, 0.5, 4.0], // Đọc tài liệu datasheet
+          [-5.0, 0, 2.2, 5.0]
         ]}
         onSelect={onSelect}
         info={{
-          id: 'customer-3',
-          title: 'Bạn Minh Châu - Sinh viên ĐH Bách Khoa Hà Nội (HUST)',
-          category: 'Khu Vực Trải Nghiệm Maker Lab',
-          price: 'Đang mượn máy đo sóng Rigol miễn phí',
+          id: 'customer-maker',
+          title: 'Thùy Linh - Kỹ Sư Thiết Kế Phần Cứng IoT',
+          category: 'Maker & Nghiên Cứu R&D',
+          price: 'Giỏ hàng: 1.250.000 đ',
           specs: [
-            'Thực hành: Đo xung PWM điều khiển động cơ servo máy bay mô hình RC',
-            'Khu Maker Lab DungAutomation: Miễn phí trạm hàn & máy hiện sóng cho sinh viên',
-            'Đánh giá: "Không gian quá xịn, được tự tay test mạch trước khi mua linh kiện!"'
+            'Tìm kiếm: ESP32-S3 Dual Type-C N16R8 & Màn hình hiển thị tròn SPI',
+            'Dự án: Thiết bị trạm quan trắc môi trường thông minh kết nối MQTT',
+            'Nhận xét: "Linh kiện ở DungAutomation rất chuẩn, chân mạ vàng sáng bóng!"'
           ],
-          desc: 'Sinh viên năm cuối ngành Điện tử Viễn thông đang sử dụng bàn thực nghiệm chuyên dụng tại cửa hàng DungAutomation để bắt sóng xung PWM.'
+          desc: 'Nữ kỹ sư trẻ tài năng đang chọn bo mạch vi điều khiển thế hệ mới hỗ trợ Wi-Fi và Bluetooth để làm sản phẩm khởi nghiệp.'
         }}
       />
 
-      {/* 4. DungAutomation Fast Shipper in Red Cap picking up order */}
-      <StylizedCharacter
-        initialPos={[0.8, 0, 3.5]}
-        colorBody="#ea580c" // Orange courier uniform
-        colorPants="#111827"
-        hasCap={true}
-        speed={1.4}
+      {/* 3. Shipper xe điện giao hàng hỏa tốc DungAutomation Express */}
+      <DioramaCharacter
+        initialPos={[3.4, 0, 3.2]}
+        jacketColor="#ea580c" // Cam thương hiệu DungAutomation
+        pantsColor="#0f172a"
+        hasHelmet={true}
+        speed={1.2}
         waypoints={[
-          [0.8, 0, 3.5, 3.0],  // Waiting at checkout counter
-          [1.8, 0, 4.2, 2.0],  // Picking up parcel
-          [3.2, 0, 3.8, 1.5],  // Heading out towards electric scooter
-          [3.8, 0, 2.0, 3.0],  // Beside the courier scooter
-          [1.8, 0, 4.2, 2.0]   // Returning for next batch
+          [2.5, 0, 3.6, 2.0], // Nhận kiện hàng tại quầy
+          [3.8, 0, 2.8, 4.0], // Đứng kiểm tra đơn cạnh xe máy điện
+          [4.5, 0, 1.5, 1.5], // Ra vỉa hè
+          [2.5, 0, 3.6, 2.0]
         ]}
         onSelect={onSelect}
         info={{
-          id: 'customer-4',
-          title: 'Shipper Tuấn Anh - Đội Giao Vận DungAutomation Express',
-          category: 'Vận Chuyển Hoả Tốc 24/7',
-          price: 'Đã hoàn thành: 28 đơn/ngày',
+          id: 'customer-shipper',
+          title: 'Tuấn Anh - Đội Giao Vận DungAutomation Express',
+          category: 'Giao Hàng Hỏa Tốc 1h',
+          price: 'Đã hoàn thành: 36 đơn hôm nay',
           specs: [
-            'Đơn hàng hiện tại: Gói combo ESP32 Cam AI + Khung xe robot 4WD đi Thanh Xuân',
-            'Thời gian dự kiến giao: 25 phút',
-            'Phương tiện: Xe điện DungAutomation pin lithium 72V 90km'
+            'Đơn hàng: Module PLC & Cảm biến tiệm cận đi KCN Thăng Long',
+            'Phương tiện: Xe máy điện chuyên dụng trang bị thùng cách nhiệt chống sốc',
+            'Cam kết: Giao hàng hỏa tốc trong 60 phút nội thành Hà Nội'
           ],
-          desc: 'Nhân viên giao nhận hoả tốc luôn túc trực để chuyển linh kiện ngay khi khách hàng đặt trực tuyến trên website.'
+          desc: 'Shipper chuyên nghiệp túc trực sẵn sàng chuyển linh kiện khẩn cấp đến các nhà máy gặp sự cố cần thay thế ngay.'
         }}
       />
 
-      {/* 5. Sidewalk Pedestrian admiring the store window */}
-      <StylizedCharacter
-        initialPos={[4.5, 0, -3.5]}
-        colorBody="#db2777" // Pink coat
-        colorHair="#09090b"
-        colorPants="#3f3f46"
+      {/* 4. Du khách dạo bước trên vỉa hè ngắm robot 6 trục qua kính */}
+      <DioramaCharacter
+        initialPos={[5.5, 0, -2.5]}
+        jacketColor="#be185d" // Áo khoác măng tô hồng cánh sen sang trọng
+        pantsColor="#18181b"
+        hairColor="#0a0a0a"
         speed={0.7}
         waypoints={[
-          [4.5, 0, -3.5, 1.0], // Walking down sidewalk
-          [4.2, 0, -0.5, 4.0], // Stopping to admire 6-DOF Robot Arm through glass
-          [4.0, 0, 2.5, 2.0],  // Checking outdoor promo totem
-          [4.5, 0, 4.5, 1.0],  // Moving on
-          [4.5, 0, -3.5, 1.0]
+          [5.5, 0, -2.5, 1.0], // Đi trên vỉa hè
+          [4.5, 0, -1.5, 5.0], // Dừng lại ngắm cánh tay robot gắp chip
+          [5.0, 0, 1.8, 3.0],  // Ngắm bảng hiệu đèn neon
+          [5.5, 0, 4.5, 1.0],
+          [5.5, 0, -2.5, 1.0]
         ]}
         onSelect={onSelect}
         info={{
-          id: 'customer-5',
-          title: 'Khách Dạo Phố - Du Khách Công Nghệ',
-          category: 'Người Qua Đường Phố Cổ',
+          id: 'customer-passerby',
+          title: 'Khách Tham Quan Công Nghệ Phố Cổ Hà Nội',
+          category: 'Người Dạo Phố',
           price: 'Trải nghiệm thị giác 3D',
           specs: [
-            'Hành động: Trầm trồ trước cánh tay robot 6 trục gắp chip công nghiệp trong tủ kính',
-            'Địa điểm: Vỉa hè đá granite mặt tiền DungAutomation Shop',
-            'Nhận xét: "Cửa hàng tự động hoá thiết kế quá sang trọng và hiện đại!"'
+            'Hành động: Trầm trồ trước cánh tay robot 6 trục gắp chip công nghiệp',
+            'Địa điểm: Vỉa hè lát đá hoa cương trước showroom DungAutomation',
+            'Đánh giá: "Cửa hàng tự động hóa thiết kế đẳng cấp như bảo tàng công nghệ!"'
           ],
-          desc: 'Người qua đường bị thu hút bởi ánh sáng neon ấm áp và cánh tay robot tự động hoạt động mượt mà xuyên qua lớp kính cường lực trong suốt.'
+          desc: 'Người qua đường bị thu hút bởi ánh sáng neon ấm áp và hoạt động mượt mà của cánh tay robot tự động.'
         }}
       />
     </group>
   )
 }
+
+export default Customers
