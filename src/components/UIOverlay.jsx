@@ -22,9 +22,22 @@ export default function UIOverlay({
 }) {
   const [isPlayingAudio, setIsPlayingAudio] = useState(false)
   const [showLightSettings, setShowLightSettings] = useState(false)
+  const [showStarModal, setShowStarModal] = useState(false)
   const [toastMessage, setToastMessage] = useState(null)
   const audioCtxRef = useRef(null)
   const audioIntervalRef = useRef(null)
+
+  // Hiển thị gợi ý Star GitHub sau 22 giây trải nghiệm nếu chưa đánh sao
+  useEffect(() => {
+    const hasPrompted = sessionStorage.getItem('star_prompted')
+    if (!hasPrompted) {
+      const timer = setTimeout(() => {
+        setShowStarModal(true)
+        sessionStorage.setItem('star_prompted', 'true')
+      }, 22000)
+      return () => clearTimeout(timer)
+    }
+  }, [])
 
   // Web Audio API ambient lofi tech synth
   const toggleAudio = () => {
@@ -94,6 +107,17 @@ export default function UIOverlay({
     showToast('🎉 Đã thêm vào danh sách tư vấn & báo giá nhanh!')
   }
 
+  const handleStarAction = () => {
+    confetti({
+      particleCount: 120,
+      spread: 90,
+      origin: { y: 0.4 }
+    })
+    setShowStarModal(false)
+    showToast('⭐ Cảm ơn bạn rất nhiều vì đã tặng 1 Sao cho Dung Automation trên GitHub!')
+    window.open('https://github.com/Dungautomation-dev/dungautomation-shop', '_blank')
+  }
+
   return (
     <div className="hud-container">
       {/* ================= TOP HEADER BAR ================= */}
@@ -103,7 +127,7 @@ export default function UIOverlay({
             <span className="brand-glow-dot"></span>
             DUNGAUTOMATION
           </div>
-          <div className="brand-title">SHOWROOM TỰ ĐỘNG HÓA & CYBERPUNK LAB 3D</div>
+          <div className="brand-title">SHOWROOM TỦ ĐIỆN VASCO & CÔNG NGHỆ 3D</div>
         </div>
 
         {/* BỘ CHỌN 4 MÙA GÓC PHỐ HÀ NỘI */}
@@ -113,7 +137,7 @@ export default function UIOverlay({
             className={`season-pill-btn ${season === 'spring' ? 'active' : ''}`}
             onClick={() => {
               onChangeSeason?.('spring')
-              showToast('🌸 Đã chuyển sang Mùa Xuân: Hoa ban & anh đào nở rộ')
+              showToast('🌸 Mùa Xuân: Hoa ban & hoa anh đào nở rộ')
             }}
           >
             🌸 Xuân
@@ -122,7 +146,7 @@ export default function UIOverlay({
             className={`season-pill-btn ${season === 'summer' ? 'active' : ''}`}
             onClick={() => {
               onChangeSeason?.('summer')
-              showToast('☀️ Đã chuyển sang Mùa Hạ: Nắng vàng & đom đóm lung linh')
+              showToast('☀️ Mùa Hạ: Tán cây xanh mướt & đom đóm lung linh')
             }}
           >
             ☀️ Hạ
@@ -131,7 +155,7 @@ export default function UIOverlay({
             className={`season-pill-btn ${season === 'autumn' ? 'active' : ''}`}
             onClick={() => {
               onChangeSeason?.('autumn')
-              showToast('🍂 Đã chuyển sang Mùa Thu: Cây bàng lá đỏ & hoàng hôn ấm')
+              showToast('🍂 Mùa Thu: Cây bàng lá đỏ & hoàng hôn ấm áp')
             }}
           >
             🍂 Thu
@@ -140,7 +164,7 @@ export default function UIOverlay({
             className={`season-pill-btn ${season === 'winter' ? 'active' : ''}`}
             onClick={() => {
               onChangeSeason?.('winter')
-              showToast('❄️ Đã chuyển sang Mùa Đông: Tuyết trắng phủ nhẹ góc phố')
+              showToast('❄️ Mùa Đông: Tuyết trắng phủ nhẹ góc phố')
             }}
           >
             ❄️ Đông
@@ -149,13 +173,29 @@ export default function UIOverlay({
 
         {/* Nút bấm điều khiển hệ thống */}
         <div className="hud-controls">
+          {/* Nút Ủng hộ 1 Star GitHub trực tiếp */}
+          <a
+            href="https://github.com/Dungautomation-dev/dungautomation-shop"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hud-btn github-star-btn"
+            onClick={(e) => {
+              confetti({ particleCount: 90, spread: 80, origin: { y: 0.2 } })
+              showToast('⭐ Cảm ơn bạn đã ghé thăm & ủng hộ Star trên GitHub!')
+            }}
+            title="Đánh sao 1-Click ủng hộ repository trên GitHub"
+          >
+            <span className="star-icon">⭐</span>
+            <span>Star Repo</span>
+          </a>
+
           {/* Nút mở bảng điều chỉnh ánh sáng chống chói */}
           <button
             className={`hud-btn ${showLightSettings ? 'active' : ''}`}
             onClick={() => setShowLightSettings((v) => !v)}
             title="Tùy chỉnh độ chói và độ sáng của đèn"
           >
-            ⚙️ Chỉnh Ánh Sáng
+            ⚙️ Chỉnh Sáng
           </button>
 
           <button
@@ -252,21 +292,40 @@ export default function UIOverlay({
         </div>
       )}
 
+      {/* ================= MODAL GỢI Ý ĐÁNH SAO 1-CLICK GITHUB (STAR PROMPT) ================= */}
+      {showStarModal && (
+        <div className="star-prompt-modal glass-card">
+          <div className="star-prompt-badge">⭐ ỦNG HỘ DỰ ÁN MÃ NGUỒN MỞ</div>
+          <h3 className="star-prompt-title">Bạn có thích Showroom 3D DungAutomation không?</h3>
+          <p className="star-prompt-desc">
+            Dành tặng 1 Sao (Star) trên GitHub để tiếp thêm động lực cho Dung Automation phát triển thêm nhiều dự án Tự động hóa & Web 3D độc đáo nhé!
+          </p>
+          <div className="star-prompt-actions">
+            <button className="star-prompt-btn primary" onClick={handleStarAction}>
+              ⭐ Tặng 1 Star Trên GitHub Ngay
+            </button>
+            <button className="star-prompt-btn secondary" onClick={() => setShowStarModal(false)}>
+              Để sau
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* ================= BOTTOM DEPARTMENT NAVIGATOR ================= */}
       <nav className="hud-departments glass-card">
+        <button
+          className="dept-nav-btn"
+          onClick={() => onCameraPreset?.('plc')}
+        >
+          <span className="dept-icon">⚡</span>
+          <span>Dàn Tủ Điện Công Nghiệp (MSB • ATS • Tụ Bù)</span>
+        </button>
         <button
           className="dept-nav-btn"
           onClick={() => onCameraPreset?.('cybertech')}
         >
           <span className="dept-icon">📱</span>
           <span>Đồ Cyberpunk 2077</span>
-        </button>
-        <button
-          className="dept-nav-btn"
-          onClick={() => onCameraPreset?.('plc')}
-        >
-          <span className="dept-icon">🎛️</span>
-          <span>Tủ PLC Siemens</span>
         </button>
         <button
           className="dept-nav-btn"
@@ -304,10 +363,10 @@ export default function UIOverlay({
           <span>🎮 Thao Tác Chuột & Phím</span>
         </div>
         <div className="hint-body">
-          <div>• <b>Chuột trái:</b> Xoay 360° tự do (không bị giật)</div>
+          <div>• <b>Chuột trái:</b> Xoay 360° tự do</div>
           <div>• <b>Chuột phải:</b> Di chuyển góc nhìn (Pan)</div>
           <div>• <b>Cuộn chuột:</b> Phóng to / Thu nhỏ</div>
-          <div>• <b>Click mô hình:</b> Khám phá đồ công nghệ tương lai</div>
+          <div>• <b>Click tủ điện:</b> Bóc tách vật tư & thông số kỹ thuật thực tế</div>
         </div>
       </div>
 
@@ -326,7 +385,7 @@ export default function UIOverlay({
 
           <p className="inspect-desc">{selectedItem.desc}</p>
 
-          <div className="inspect-specs-title">Thông số kỹ thuật & Tính năng nổi bật:</div>
+          <div className="inspect-specs-title">Bóc tách vật tư & Thông số kỹ thuật (Chuẩn VASCO):</div>
           <ul className="inspect-specs-list">
             {selectedItem.specs?.map((spec, i) => (
               <li key={i}>{spec}</li>
@@ -335,7 +394,7 @@ export default function UIOverlay({
 
           <div className="inspect-actions">
             <button className="inspect-action-btn primary" onClick={handleOrderAction}>
-              ⚡ Đặt Mua & Tư Vấn Kỹ Thuật
+              ⚡ Nhận Báo Giá Dự Án & Hồ Sơ Bản Vẽ
             </button>
             <button className="inspect-action-btn secondary" onClick={onCloseInspect}>
               Đóng Xem Lại

@@ -693,3 +693,108 @@ body, html, #root {
   border-color: #00f3ff;
   color: #00f3ff;
 }
+
+
+/* ================= GITHUB 1-CLICK STAR BUTTON & PROMPT MODAL ================= */
+.github-star-btn {
+  text-decoration: none;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(234, 88, 12, 0.35)) !important;
+  border-color: #f59e0b !important;
+  color: #fef08a !important;
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.4);
+  font-weight: 800;
+}
+
+.github-star-btn:hover {
+  background: linear-gradient(135deg, #f59e0b, #ea580c) !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 22px rgba(245, 158, 11, 0.7);
+  transform: translateY(-2px);
+}
+
+.star-icon {
+  font-size: 14px;
+}
+
+/* Star Prompt Modal */
+.star-prompt-modal {
+  position: absolute;
+  bottom: 95px;
+  right: 24px;
+  width: 360px;
+  pointer-events: auto;
+  padding: 18px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-color: #f59e0b;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(245, 158, 11, 0.3);
+  animation: slideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 30;
+}
+
+.star-prompt-badge {
+  font-family: var(--font-code);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  color: #fbbf24;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  padding: 3px 8px;
+  border-radius: 6px;
+  width: fit-content;
+}
+
+.star-prompt-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.35;
+}
+
+.star-prompt-desc {
+  font-size: 11.5px;
+  color: #cbd5e1;
+  line-height: 1.55;
+}
+
+.star-prompt-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.star-prompt-btn {
+  font-family: var(--font-main);
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.16s ease;
+}
+
+.star-prompt-btn.primary {
+  flex: 1;
+  background: linear-gradient(135deg, #f59e0b, #ea580c);
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+}
+
+.star-prompt-btn.primary:hover {
+  filter: brightness(1.2);
+  transform: translateY(-1px);
+}
+
+.star-prompt-btn.secondary {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-glass);
+  color: #94a3b8;
+}
+
+.star-prompt-btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
