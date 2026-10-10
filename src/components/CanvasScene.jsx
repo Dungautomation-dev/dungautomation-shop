@@ -14,6 +14,7 @@ import CyberTechDept from './CyberTechDept'
 import StreetCornerEnvironment from './StreetCornerEnvironment'
 import MiniConveyorDept from './MiniConveyorDept'
 import ScadaStationDept from './ScadaStationDept'
+import InteractiveEarthSolarSystem from './InteractiveEarthSolarSystem'
 import Customers from './Customers'
 import LightingAndPostFx from './LightingAndPostFx'
 
@@ -151,6 +152,10 @@ function CameraDirector({ preset, controlsRef }) {
       case 'scada':
         targetCamPos.current.set(-2.0, 4.2, -3.4)
         targetLookAt.current.set(-4.2, 1.8, -6.0)
+        break
+      case 'earth':
+        targetCamPos.current.set(0, 24, -8)
+        targetLookAt.current.set(0, 24, -28)
         break
       case 'checkout':
         targetCamPos.current.set(5.8, 4.8, 7.8)
@@ -294,6 +299,9 @@ export default function CanvasScene({
 
         {/* CẢNH VẬT GÓC PHỐ 4 MÙA (Hàng cây đổi màu, hạt thời tiết bay, máy bán nước, biển tên phố) */}
         <StreetCornerEnvironment season={season} isNight={isNightMode} onSelect={handleSelect} />
+
+        {/* QUẢ ĐỊA CẦU KHỔNG LỒ TƯƠNG TÁC & HỆ MẶT TRỜI QUAY QUANH */}
+        <InteractiveEarthSolarSystem onSelect={handleSelect} />
 
         {/* Nhân vật khách hàng & kỹ sư dạo bước */}
         <Customers onSelect={handleSelect} />

@@ -603,6 +603,134 @@ export default function StreetCornerEnvironment({ season = 'spring', isNight = f
           ))
         )}
       </group>
+
+      {/* ================= 13. TOÀN CẢNH ĐÔ THỊ MỞ RỘNG 4 PHÍA (FULL SURROUNDING LANDSCAPE 160X160M) ================= */}
+      {/* 13.1 Mặt nền đô thị rộng lớn bao trùm toàn bộ không gian xung quanh */}
+      <mesh position={[0, -0.02, 0]} receiveShadow>
+        <boxGeometry args={[140, 0.04, 140]} />
+        <meshStandardMaterial color="#111827" roughness={0.95} metalness={0.05} />
+      </mesh>
+
+      {/* Các trục đường nhựa đại lộ mở rộng về 4 hướng */}
+      {/* Trục đường lớn phía Nam (Z = 14) */}
+      <group position={[0, 0.01, 15]}>
+        <mesh receiveShadow>
+          <boxGeometry args={[130, 0.02, 7.5]} />
+          <meshStandardMaterial color="#18181b" roughness={0.9} />
+        </mesh>
+        {/* Vạch sơn tim đường vàng */}
+        <mesh position={[0, 0.025, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+          <planeGeometry args={[120, 0.25]} />
+          <meshStandardMaterial color="#facc15" roughness={0.8} />
+        </mesh>
+      </group>
+
+      {/* Trục đường lớn phía Đông (X = 16) */}
+      <group position={[18, 0.01, 0]}>
+        <mesh receiveShadow>
+          <boxGeometry args={[8.5, 0.02, 130]} />
+          <meshStandardMaterial color="#18181b" roughness={0.9} />
+        </mesh>
+      </group>
+
+      {/* 13.2 Khối nhà cao tầng đô thị phía Nam (South City Skyline) */}
+      {[-24, -12, 12, 24].map((bx, bi) => (
+        <group key={`south-bld-${bi}`} position={[bx, 0, 22]}>
+          <mesh castShadow receiveShadow position={[0, 5.5 + (bi % 2) * 2.5, 0]}>
+            <boxGeometry args={[9.5, 11 + (bi % 2) * 5, 7.0]} />
+            <meshStandardMaterial color={bi % 2 === 0 ? '#1e293b' : '#334155'} roughness={0.6} />
+          </mesh>
+          {/* Cửa sổ phát sáng ấm ban đêm */}
+          <mesh position={[0, 5.5, -3.52]}>
+            <planeGeometry args={[8.0, 9.0]} />
+            <meshStandardMaterial
+              color="#fef08a"
+              emissive="#fde047"
+              emissiveIntensity={isNight ? 1.5 : 0.4}
+              roughness={0.3}
+            />
+          </mesh>
+        </group>
+      ))}
+
+      {/* 13.3 Khối tháp trung tâm công nghệ phía Đông (East Tech Towers) */}
+      {[-16, 0, 16].map((bz, bj) => (
+        <group key={`east-bld-${bj}`} position={[28, 0, bz]}>
+          <mesh castShadow receiveShadow position={[0, 8.0 + (bj % 2) * 4, 0]}>
+            <boxGeometry args={[8.0, 16 + (bj % 2) * 8, 12.0]} />
+            <meshStandardMaterial color="#0f172a" metalness={0.7} roughness={0.3} />
+          </mesh>
+          {/* Mặt kính vách dựng phản chiếu xanh cyan */}
+          <mesh position={[-4.02, 8.0, 0]} rotation={[0, -Math.PI / 2, 0]}>
+            <planeGeometry args={[11.0, 14.0]} />
+            <meshPhysicalMaterial
+              color="#0284c7"
+              emissive="#00f3ff"
+              emissiveIntensity={isNight ? 0.8 : 0.2}
+              roughness={0.1}
+              transmission={0.4}
+              transparent
+              opacity={0.8}
+            />
+          </mesh>
+        </group>
+      ))}
+
+      {/* 13.4 Khuôn viên nhà máy Dateco & công viên sinh thái phía Tây (West Campus & Lake) */}
+      <group position={[-26, 0, 0]}>
+        {/* Tòa nhà điều hành sản xuất Dateco phía Tây */}
+        <mesh position={[0, 4.5, -8]} castShadow receiveShadow>
+          <boxGeometry args={[12.0, 9.0, 16.0]} />
+          <meshStandardMaterial color="#1e2430" roughness={0.5} metalness={0.4} />
+        </mesh>
+        {/* Mặt hồ nước sinh thái phản chiếu ánh đèn */}
+        <mesh position={[0, 0.03, 10]} rotation={[-Math.PI / 2, 0, 0]}>
+          <planeGeometry args={[18, 14]} />
+          <meshPhysicalMaterial
+            color="#0369a1"
+            transmission={0.8}
+            roughness={0.08}
+            metalness={0.9}
+            transparent
+            opacity={0.85}
+          />
+        </mesh>
+      </group>
+
+      {/* 13.5 Hàng cột đèn đường thông minh trên các đại lộ xa */}
+      {[-30, -15, 0, 15, 30].map((lx, li) => (
+        <group key={`slamp-${li}`} position={[lx, 0, 11.5]}>
+          <mesh position={[0, 2.8, 0]} castShadow>
+            <cylinderGeometry args={[0.07, 0.1, 5.6, 12]} />
+            <meshStandardMaterial color="#334155" metalness={0.8} />
+          </mesh>
+          <mesh position={[0, 5.6, 0.4]}>
+            <boxGeometry args={[0.3, 0.1, 0.8]} />
+            <meshStandardMaterial color="#0f172a" />
+          </mesh>
+          <pointLight
+            position={[0, 5.4, 0.6]}
+            color="#fef08a"
+            intensity={isNight ? 2.5 : 1.0}
+            distance={10}
+            decay={2}
+          />
+        </group>
+      ))}
+
+      {/* 13.6 Hàng cây xanh bóng mát trên các vỉa hè xa */}
+      {[-28, -20, -12, 12, 20, 28].map((tx, ti) => (
+        <group key={`stree-${ti}`} position={[tx, 0, 18.5]}>
+          <mesh position={[0, 1.5, 0]} castShadow>
+            <cylinderGeometry args={[0.18, 0.25, 3.0, 10]} />
+            <meshStandardMaterial color="#3e2723" roughness={0.9} />
+          </mesh>
+          <mesh position={[0, 3.8, 0]} castShadow>
+            <dodecahedronGeometry args={[1.5, 1]} />
+            <meshStandardMaterial color={foliageColor} roughness={0.65} />
+          </mesh>
+        </group>
+      ))}
     </group>
   )
 }

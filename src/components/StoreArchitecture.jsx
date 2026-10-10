@@ -2,39 +2,68 @@ import React, { useMemo } from 'react'
 import * as THREE from 'three'
 
 export function StoreArchitecture({ isNight }) {
-  // Biển hiệu Neon độ phân giải cao sắc nét bằng HTML5 Canvas 2D
-  const mainNeonTex = useMemo(() => {
+  // Biển hiệu Dũng Automation độ phân giải cao 2048x400 siêu sắc nét, KHÔNG BỊ LÓA
+  const signboardTex = useMemo(() => {
     const cvs = document.createElement('canvas')
-    cvs.width = 1024
-    cvs.height = 160
+    cvs.width = 2048
+    cvs.height = 420
     const ctx = cvs.getContext('2d')
-    ctx.clearRect(0, 0, 1024, 160)
-    ctx.font = 'bold 56px "Plus Jakarta Sans", sans-serif'
-    ctx.textAlign = 'center'
-    ctx.textBaseline = 'middle'
-    ctx.shadowColor = '#00f3ff'
-    ctx.shadowBlur = 24
-    ctx.fillStyle = '#ffffff'
-    ctx.fillText('⚡ DUNGAUTOMATION ⚡', 512, 80)
-    ctx.shadowBlur = 8
-    ctx.fillStyle = '#00f3ff'
-    ctx.fillText('⚡ DUNGAUTOMATION ⚡', 512, 80)
-    return new THREE.CanvasTexture(cvs)
-  }, [])
 
-  const subNeonTex = useMemo(() => {
-    const cvs = document.createElement('canvas')
-    cvs.width = 1024
-    cvs.height = 100
-    const ctx = cvs.getContext('2d')
-    ctx.clearRect(0, 0, 1024, 100)
-    ctx.font = 'bold 36px "JetBrains Mono", monospace'
+    // Nền mica đen ánh xám công nghiệp sang trọng
+    ctx.fillStyle = '#060a12'
+    ctx.fillRect(0, 0, 2048, 420)
+
+    // Khung viền chỉ kim loại kép màu xanh cyan thanh lịch
+    ctx.strokeStyle = '#00f3ff'
+    ctx.lineWidth = 4
+    ctx.strokeRect(20, 20, 2008, 380)
+    ctx.strokeStyle = '#0284c7'
+    ctx.lineWidth = 2
+    ctx.strokeRect(28, 28, 1992, 364)
+
+    // Huy hiệu Dateco góc trái và phải
+    ctx.fillStyle = '#0284c7'
+    ctx.fillRect(50, 45, 130, 36)
+    ctx.fillRect(1868, 45, 130, 36)
+    ctx.fillStyle = '#ffffff'
+    ctx.font = 'bold 20px "Segoe UI", sans-serif'
     ctx.textAlign = 'center'
-    ctx.textBaseline = 'middle'
+    ctx.fillText('DATECO', 115, 70)
+    ctx.fillText('DATECO', 1933, 70)
+
+    // Dòng chữ thương hiệu chính: ⚡ DŨNG AUTOMATION ⚡
+    ctx.textAlign = 'center'
+    ctx.font = '900 86px "Plus Jakarta Sans", "Segoe UI", Arial, sans-serif'
+    
+    // Viền nét nhẹ để chữ nổi bật, không dùng blur dày gây nhòe
+    ctx.strokeStyle = '#00f3ff'
+    ctx.lineWidth = 3
+    ctx.strokeText('⚡ DŨNG AUTOMATION ⚡', 1024, 155)
+
+    ctx.fillStyle = '#ffffff'
+    ctx.fillText('⚡ DŨNG AUTOMATION ⚡', 1024, 155)
+
+    // Đường gạch chỉ phân cách vàng kim sang trọng
+    ctx.strokeStyle = '#f59e0b'
+    ctx.lineWidth = 3
+    ctx.beginPath()
+    ctx.moveTo(320, 215)
+    ctx.lineTo(1728, 215)
+    ctx.stroke()
+
+    // Khẩu hiệu chính thức: "Chia sẻ để thành công"
+    ctx.font = 'italic bold 52px "Segoe UI", serif, sans-serif'
+    ctx.fillStyle = '#fde047'
     ctx.shadowColor = '#f59e0b'
-    ctx.shadowBlur = 18
-    ctx.fillStyle = '#fef08a'
-    ctx.fillText('SIEMENS PLC • ESP32 • ARDUINO • ROBOTICS LAB', 512, 50)
+    ctx.shadowBlur = 6
+    ctx.fillText('“ Chia sẻ để thành công ”', 1024, 285)
+    ctx.shadowBlur = 0
+
+    // Dòng giới thiệu thiết bị Dateco
+    ctx.font = 'bold 26px "JetBrains Mono", monospace'
+    ctx.fillStyle = '#38bdf8'
+    ctx.fillText('HỆ THỐNG TỦ ĐIỆN CÔNG NGHIỆP DATECO • SCADA • PLC SIEMENS • ROBOTICS', 1024, 355)
+
     return new THREE.CanvasTexture(cvs)
   }, [])
 
@@ -108,37 +137,25 @@ export function StoreArchitecture({ isNight }) {
         <meshStandardMaterial color="#0f172a" roughness={0.3} metalness={0.8} />
       </mesh>
 
-      {/* ================= 4. BẢNG HIỆU NEON TRANG TRỌNG TRÊN TƯỜNG SHOWROOM ================= */}
+      {/* ================= 4. BẢNG HIỆU DATECO & DŨNG AUTOMATION NÉT ĐẸP KHÔNG LÓA ================= */}
       <group position={[-1.5, 6.2, -8.6]}>
-        {/* Nền mica đen bóng sang trọng */}
+        {/* Nền khung kim loại sang trọng */}
         <mesh position={[0, 0, 0]} castShadow>
-          <boxGeometry args={[10.5, 1.6, 0.08]} />
-          <meshStandardMaterial color="#090d16" roughness={0.2} metalness={0.9} />
+          <boxGeometry args={[11.2, 1.8, 0.08]} />
+          <meshStandardMaterial color="#0b0f19" roughness={0.3} metalness={0.8} />
         </mesh>
 
-        {/* Chữ Neon phát quang chính */}
-        <mesh position={[0, 0.22, 0.05]}>
-          <planeGeometry args={[10.0, 1.2]} />
+        {/* Mặt bảng hiệu siêu nét, không bị lóa (toneMapped=true, balanced emissive) */}
+        <mesh position={[0, 0, 0.05]}>
+          <planeGeometry args={[11.0, 1.7]} />
           <meshStandardMaterial
-            map={mainNeonTex}
-            transparent
-            emissive="#00f3ff"
-            emissiveIntensity={isNight ? 2.8 : 1.8}
-            roughness={0.1}
-            toneMapped={false}
-          />
-        </mesh>
-
-        {/* Dòng chữ phụ vàng ấm */}
-        <mesh position={[0, -0.45, 0.05]}>
-          <planeGeometry args={[8.5, 0.6]} />
-          <meshStandardMaterial
-            map={subNeonTex}
-            transparent
-            emissive="#f59e0b"
-            emissiveIntensity={isNight ? 2.4 : 1.5}
-            roughness={0.1}
-            toneMapped={false}
+            map={signboardTex}
+            emissiveMap={signboardTex}
+            emissive="#ffffff"
+            emissiveIntensity={isNight ? 0.7 : 0.45}
+            roughness={0.2}
+            metalness={0.1}
+            toneMapped={true}
           />
         </mesh>
       </group>

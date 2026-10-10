@@ -137,12 +137,19 @@ export default function CyberTechDept({ onSelect }) {
     return new THREE.CanvasTexture(cvs)
   }, [])
 
-  // Animation lơ lửng của Drone và màn hình Holo
+  // Animation lơ lửng của màn hình Holo và Drone bay tuần tra trên không (tránh chắn màn hình TV)
   useFrame((state) => {
     const t = state.clock.elapsedTime
     if (droneRef.current) {
-      droneRef.current.position.y = 2.4 + Math.sin(t * 3) * 0.08
-      droneRef.current.rotation.y = Math.sin(t * 1.5) * 0.2
+      // Drone bay tuần tra trên không (cao 3.8m - 4.2m) theo quỹ đạo elip quanh phòng, không che khuất TV
+      const angle = t * 0.6
+      const radX = 4.5
+      const radZ = 3.8
+      droneRef.current.position.x = Math.cos(angle) * radX - 2.8
+      droneRef.current.position.z = Math.sin(angle) * radZ - 1.2
+      droneRef.current.position.y = 3.8 + Math.sin(t * 2) * 0.35
+      droneRef.current.rotation.y = -angle + Math.PI / 2
+      droneRef.current.rotation.z = Math.sin(t * 2) * 0.15
     }
     if (holoScreenRef.current) {
       holoScreenRef.current.material.opacity = 0.85 + Math.sin(t * 4) * 0.1

@@ -26,6 +26,7 @@ export default function UIOverlay({
   const [showWelcomeGate, setShowWelcomeGate] = useState(() => {
     return !localStorage.getItem('dungauto_welcome_unlocked')
   })
+  const [isHintMinimized, setIsHintMinimized] = useState(true)
   const [toastMessage, setToastMessage] = useState(null)
   const audioCtxRef = useRef(null)
   const audioIntervalRef = useRef(null)
@@ -148,7 +149,7 @@ export default function UIOverlay({
             <span className="brand-glow-dot"></span>
             DUNGAUTOMATION
           </div>
-          <div className="brand-title">SHOWROOM TỦ ĐIỆN VASCO & CÔNG NGHỆ 3D</div>
+          <div className="brand-title">SHOWROOM TỦ ĐIỆN DATECO & CÔNG NGHỆ 3D</div>
         </div>
 
         {/* BỘ CHỌN 4 MÙA GÓC PHỐ HÀ NỘI */}
@@ -348,14 +349,21 @@ export default function UIOverlay({
           onClick={() => onCameraPreset?.('plc')}
         >
           <span className="dept-icon">⚡</span>
-          <span>Dàn Tủ Điện VASCO</span>
+          <span>Dàn Tủ Điện DATECO</span>
+        </button>
+        <button
+          className="dept-nav-btn"
+          onClick={() => onCameraPreset?.('earth')}
+        >
+          <span className="dept-icon">🌍</span>
+          <span>Quả Địa Cầu & Vũ Trụ</span>
         </button>
         <button
           className="dept-nav-btn"
           onClick={() => onCameraPreset?.('scada')}
         >
           <span className="dept-icon">💧</span>
-          <span>SCADA Xử Lý Nước Thải</span>
+          <span>SCADA Nước Thải</span>
         </button>
         <button
           className="dept-nav-btn"
@@ -387,13 +395,6 @@ export default function UIOverlay({
         </button>
         <button
           className="dept-nav-btn"
-          onClick={() => onCameraPreset?.('arduino')}
-        >
-          <span className="dept-icon">⚡</span>
-          <span>ESP32 & Arduino</span>
-        </button>
-        <button
-          className="dept-nav-btn"
           onClick={() => onCameraPreset?.('checkout')}
         >
           <span className="dept-icon">🛵</span>
@@ -401,18 +402,37 @@ export default function UIOverlay({
         </button>
       </nav>
 
-      {/* ================= CONTROLS HINT (BOTTOM LEFT) ================= */}
-      <div className="hud-hint glass-card">
-        <div className="hint-header">
-          <span>🎮 Thao Tác Chuột & Phím</span>
+      {/* ================= CONTROLS HINT (BOTTOM LEFT) - HỖ TRỢ THU NHỎ GỌN GÀNG KHÔNG CHE CHẮN ================= */}
+      {isHintMinimized ? (
+        <button
+          className="hud-hint-toggle-btn glass-card"
+          onClick={() => setIsHintMinimized(false)}
+          title="Bấm để xem hướng dẫn thao tác chuột & phím tắt"
+        >
+          <span>🎮 Hướng dẫn điều khiển</span>
+          <span className="toggle-badge">▲</span>
+        </button>
+      ) : (
+        <div className="hud-hint glass-card">
+          <div className="hint-header">
+            <span>🎮 Thao Tác Chuột & Phím</span>
+            <button
+              className="hint-minimize-btn"
+              onClick={() => setIsHintMinimized(true)}
+              title="Thu nhỏ lại"
+            >
+              ✕ Thu nhỏ
+            </button>
+          </div>
+          <div className="hint-body">
+            <div>• <b>Chuột trái:</b> Xoay 360° tự do</div>
+            <div>• <b>Chuột phải:</b> Di chuyển góc nhìn (Pan)</div>
+            <div>• <b>Cuộn chuột:</b> Phóng to / Thu nhỏ</div>
+            <div>• <b>Kéo Địa Cầu:</b> Tương tác xoay Trái Đất 3D</div>
+            <div>• <b>Click tủ điện:</b> Bóc tách thông số kỹ thuật Dateco</div>
+          </div>
         </div>
-        <div className="hint-body">
-          <div>• <b>Chuột trái:</b> Xoay 360° tự do</div>
-          <div>• <b>Chuột phải:</b> Di chuyển góc nhìn (Pan)</div>
-          <div>• <b>Cuộn chuột:</b> Phóng to / Thu nhỏ</div>
-          <div>• <b>Click tủ điện:</b> Bóc tách vật tư & thông số kỹ thuật thực tế</div>
-        </div>
-      </div>
+      )}
 
       {/* ================= INSPECT MODAL / DRAWER ================= */}
       {selectedItem && (
@@ -429,7 +449,7 @@ export default function UIOverlay({
 
           <p className="inspect-desc">{selectedItem.desc}</p>
 
-          <div className="inspect-specs-title">Bóc tách vật tư & Thông số kỹ thuật (Chuẩn VASCO):</div>
+          <div className="inspect-specs-title">Bóc tách vật tư & Thông số kỹ thuật (Chuẩn DATECO):</div>
           <ul className="inspect-specs-list">
             {selectedItem.specs?.map((spec, i) => (
               <li key={i}>{spec}</li>
@@ -459,15 +479,22 @@ export default function UIOverlay({
               ⚡ SHOWROOM 3D DUNGAUTOMATION
             </h1>
             <p className="welcome-gate-subtitle">
-              Không gian số hóa 3D tương tác thời gian thực: Tủ điện công nghiệp VASCO chuẩn nhà máy & Thiết bị công nghệ tương lai Cyberpunk 2077.
+              Không gian số hóa 3D tương tác thời gian thực: Hệ thống tủ bảng điện DATECO chuẩn công nghiệp & Thiết bị công nghệ tương lai Cyberpunk 2077.
             </p>
 
             <div className="welcome-gate-highlights">
               <div className="highlight-item">
                 <span className="hl-icon">⚡</span>
                 <div className="hl-text">
-                  <b>Tủ Điện VASCO Chuẩn Nhà Máy</b>
-                  <span>MSB 2000A • ATS 800A • Tụ Bù 300kVAR • PLC S7-1200</span>
+                  <b>Tủ Điện & Trạm DATECO</b>
+                  <span>Trạm Kiosk, Trạm Trụ, Tủ MCC ngăn kéo, Tàu biển, RMU 24kV</span>
+                </div>
+              </div>
+              <div className="highlight-item">
+                <span className="hl-icon">🌍</span>
+                <div className="hl-text">
+                  <b>Quả Địa Cầu & Hệ Mặt Trời</b>
+                  <span>Kéo chuột xoay Trái Đất 3D • Mặt Trời, Mặt Trăng & Sao Thổ quay quanh</span>
                 </div>
               </div>
               <div className="highlight-item">
@@ -488,14 +515,14 @@ export default function UIOverlay({
                 <span className="hl-icon">📱</span>
                 <div className="hl-text">
                   <b>Công Nghệ Cyberpunk 2077</b>
-                  <span>Điện thoại gập 3 màn • TV OLED trong suốt • Laptop Cyberdeck</span>
+                  <span>Điện thoại gập 3 màn • TV OLED trong suốt • Drone tuần tra</span>
                 </div>
               </div>
               <div className="highlight-item">
                 <span className="hl-icon">🏛️</span>
                 <div className="hl-text">
-                  <b>Quang Cảnh Phố Cổ & Ngoại Thất</b>
-                  <span>Nhà cổ Pháp • Quán Cà phê vỉa hè • Cột đèn đường • Xe điện mini</span>
+                  <b>Quang Cảnh Đô Thị 360°</b>
+                  <span>Phố cổ Hà Nội • Đại lộ 4 hướng • Xe điện mini • Cột đèn đường</span>
                 </div>
               </div>
               <div className="highlight-item">
