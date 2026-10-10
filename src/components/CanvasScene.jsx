@@ -12,6 +12,8 @@ import ArduinoEspDept from './ArduinoEspDept'
 import CheckoutDept from './CheckoutDept'
 import CyberTechDept from './CyberTechDept'
 import StreetCornerEnvironment from './StreetCornerEnvironment'
+import MiniConveyorDept from './MiniConveyorDept'
+import ScadaStationDept from './ScadaStationDept'
 import Customers from './Customers'
 import LightingAndPostFx from './LightingAndPostFx'
 
@@ -80,6 +82,33 @@ const DEPT_CATALOG = {
       'Drone trợ lý trí tuệ nhân tạo bay lơ lửng bằng lực nâng từ trường ion'
     ],
     desc: 'Khu vực trưng bày những thiết bị công nghệ đỉnh cao phong cách Cyberpunk 2077, cho phép trải nghiệm trực tiếp các thiết bị màn hình gập và màn hình trong suốt thế hệ mới.'
+  },
+  mini_conveyor: {
+    id: 'mini_conveyor',
+    title: 'Dây Chuyền Băng Tải Phân Loại Sản Phẩm Tự Động Mini',
+    category: 'Industrial Automation Demo',
+    price: 'Mô hình thực nghiệm: 24.500.000 đ',
+    specs: [
+      'Băng tải cao su PVC chống trượt, động cơ DC 24V 60W điều tốc PWM tích hợp Encoder',
+      'Cảm biến quang Omron E3Z-D61 nhận diện phôi và Cảm biến tiệm cận kim loại Omron E2E',
+      'Cụm xilanh khí nén SMC dẫn hướng MGPM16-30Z và van điện từ Festo phân loại phôi lỗi Reject',
+      'Tháp đèn tín hiệu 3 tầng PATLITE (Red/Yellow/Green) hiển thị trạng thái vận hành',
+      'Lập trình điều khiển phối hợp PLC Siemens S7-1200 kết nối truyền thông công nghiệp'
+    ],
+    desc: 'Mô hình dây chuyền phân loại tự động hóa mini kích thước thu nhỏ mô phỏng thực tế quá trình sản xuất nhà máy thông minh, phục vụ đào tạo R&D và kiểm thử thuật toán PLC.'
+  },
+  scada_wastewater: {
+    id: 'scada_wastewater',
+    title: 'Hệ Thống SCADA & PLC Giám Sát Trạm Xử Lý Nước Thải 500m³/ngày.đêm',
+    category: 'SCADA & Industrial Environmental Automation',
+    price: 'Dự án trọn gói: Lập trình PLC S7-1200, Thiết kế SCADA WinCC / Web',
+    specs: [
+      'Giám sát quy trình P&ID: Bể Điều Hòa, Anoxic, Aerotank sục khí, Lắng sinh học & Khử trùng',
+      'Tự động hóa bơm chìm, cánh khuấy, máy thổi khí Roots Blower điều khiển qua biến tần VFD',
+      'Đo lường & Quan trắc liên tục 24/7: pH, DO (Oxy hòa tan), COD, TSS và Lưu lượng xả thải',
+      'Lập trình TIA Portal v18 S7-1200 kết hợp Web SCADA giám sát từ xa qua điện thoại'
+    ],
+    desc: 'Trạm điều hành kỹ sư SCADA tự động hóa trạm xử lý nước thải chuẩn công nghiệp, cho phép giám sát thông số môi trường thời gian thực, lưu trữ data log và cảnh báo sự cố tự động.'
   }
 }
 
@@ -114,6 +143,14 @@ function CameraDirector({ preset, controlsRef }) {
       case 'cybertech':
         targetCamPos.current.set(6.2, 4.5, 4.8)
         targetLookAt.current.set(2.8, 1.4, 1.2)
+        break
+      case 'conveyor':
+        targetCamPos.current.set(0.5, 4.2, 0.8)
+        targetLookAt.current.set(-1.6, 1.3, -1.8)
+        break
+      case 'scada':
+        targetCamPos.current.set(-2.0, 4.2, -3.4)
+        targetLookAt.current.set(-4.2, 1.8, -6.0)
         break
       case 'checkout':
         targetCamPos.current.set(5.8, 4.8, 7.8)
@@ -233,6 +270,12 @@ export default function CanvasScene({
 
         {/* Phân khu 1: Siemens PLC S7-1200, HMI SCADA, Inverter VFD Cabinet */}
         <PlcAutomationDept onSelect={handleSelect} />
+
+        {/* Phân khu SCADA: TRẠM KỸ SƯ SCADA GIÁM SÁT TRẠM XỬ LÝ NƯỚC THẢI & TIA PORTAL */}
+        <ScadaStationDept onSelect={handleSelect} />
+
+        {/* Phân khu BĂNG TẢI: DÂY CHUYỀN BĂNG TẢI PHÂN LOẠI SẢN PHẨM TỰ ĐỘNG MINI */}
+        <MiniConveyorDept onSelect={handleSelect} />
 
         {/* Phân khu 2: Cánh tay Robot 6-DOF, Mâm xoay Turntable, Máy in 3D */}
         <RoboticsDept onSelect={handleSelect} />

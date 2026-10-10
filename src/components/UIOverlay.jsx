@@ -348,7 +348,21 @@ export default function UIOverlay({
           onClick={() => onCameraPreset?.('plc')}
         >
           <span className="dept-icon">⚡</span>
-          <span>Dàn Tủ Điện Công Nghiệp (MSB • ATS • Tụ Bù)</span>
+          <span>Dàn Tủ Điện VASCO</span>
+        </button>
+        <button
+          className="dept-nav-btn"
+          onClick={() => onCameraPreset?.('scada')}
+        >
+          <span className="dept-icon">💧</span>
+          <span>SCADA Xử Lý Nước Thải</span>
+        </button>
+        <button
+          className="dept-nav-btn"
+          onClick={() => onCameraPreset?.('conveyor')}
+        >
+          <span className="dept-icon">🏭</span>
+          <span>Dây Chuyền Mini</span>
         </button>
         <button
           className="dept-nav-btn"
@@ -453,28 +467,42 @@ export default function UIOverlay({
                 <span className="hl-icon">⚡</span>
                 <div className="hl-text">
                   <b>Tủ Điện VASCO Chuẩn Nhà Máy</b>
-                  <span>MSB 2000A • ATS 800A • Tụ Bù 300kVAR • PLC S7-1200 + HMI SCADA</span>
+                  <span>MSB 2000A • ATS 800A • Tụ Bù 300kVAR • PLC S7-1200</span>
+                </div>
+              </div>
+              <div className="highlight-item">
+                <span className="hl-icon">💧</span>
+                <div className="hl-text">
+                  <b>SCADA Xử Lý Nước Thải</b>
+                  <span>Bể Điều hòa, Anoxic, Aerotank sục khí, Lắng, TIA Portal v18</span>
+                </div>
+              </div>
+              <div className="highlight-item">
+                <span className="hl-icon">🏭</span>
+                <div className="hl-text">
+                  <b>Dây Chuyền Mini Tự Động</b>
+                  <span>Băng tải chạy phôi • Cảm biến quang laser • Xilanh SMC gạt</span>
                 </div>
               </div>
               <div className="highlight-item">
                 <span className="hl-icon">📱</span>
                 <div className="hl-text">
                   <b>Công Nghệ Cyberpunk 2077</b>
-                  <span>Điện thoại gập 3 màn • TV OLED trong suốt 8K • Laptop Cyberdeck</span>
+                  <span>Điện thoại gập 3 màn • TV OLED trong suốt • Laptop Cyberdeck</span>
                 </div>
               </div>
               <div className="highlight-item">
-                <span className="hl-icon">🌸</span>
+                <span className="hl-icon">🏛️</span>
                 <div className="hl-text">
-                  <b>Góc Phố Hà Nội 4 Mùa</b>
-                  <span>Xuân - Hạ - Thu - Đông • Hiệu ứng hoa ban, đom đóm, lá vàng, tuyết trắng</span>
+                  <b>Quang Cảnh Phố Cổ & Ngoại Thất</b>
+                  <span>Nhà cổ Pháp • Quán Cà phê vỉa hè • Cột đèn đường • Xe điện mini</span>
                 </div>
               </div>
               <div className="highlight-item">
                 <span className="hl-icon">🎮</span>
                 <div className="hl-text">
-                  <b>Tương Tác 360° Chống Chói Đỉnh Cao</b>
-                  <span>Bề mặt nhám mịn matte slate • Tự do xoay chuột không lo snap back</span>
+                  <b>Tương Tác 360° Chống Chói</b>
+                  <span>Sàn Matte Slate • Tự do xoay chuột không lo snap back</span>
                 </div>
               </div>
             </div>

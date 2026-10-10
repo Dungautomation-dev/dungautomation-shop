@@ -314,6 +314,296 @@ export default function StreetCornerEnvironment({ season = 'spring', isNight = f
           <meshStandardMaterial color="#dc2626" roughness={0.4} metalness={0.4} />
         </mesh>
       </group>
+
+      {/* ================= 7. DÃY NHÀ PHỐ CỔ HÀ NỘI & TECH HUB PHÍA SAU (BACKDROP BUILDINGS) ================= */}
+      {/* 7.1 Nhà phố Pháp cổ Hà Nội (French-Colonial Shophouse) */}
+      <group
+        position={[-4.5, 0, -10.2]}
+        onClick={(e) => {
+          e.stopPropagation()
+          onSelect?.({
+            id: 'hanoi-shophouse',
+            title: 'Khu Nhà Phố Cổ Hà Nội (Kiến Trúc Pháp Cổ Điển)',
+            category: 'Quang Cảnh Đô Thị Xung Quanh',
+            price: 'Khu bảo tồn di sản & phố công nghệ',
+            specs: [
+              'Kiến trúc nhà phố 2 tầng tường vàng đặc trưng, mái ngói dốc đỏ cam truyền thống',
+              'Ban công sắt nghệ thuật uốn hoa văn cổ điển kết hợp giàn hoa rủ ban công',
+              'Tầng 1 là quán cà phê vỉa hè "Cà Phê Phố Cổ 1986" với mái hiên sọc kẻ kinh điển'
+            ],
+            desc: 'Quang cảnh phố cổ Hà Nội liền kề tạo nên không gian giao thoa văn hóa độc đáo giữa nét rêu phong hoài niệm của Thủ đô nghìn năm và công nghệ tự động hóa hiện đại.'
+          })
+        }}
+        cursor="pointer"
+      >
+        {/* Khối nhà chính tường vàng cổ kính */}
+        <mesh position={[0, 3.2, 0]} castShadow receiveShadow>
+          <boxGeometry args={[6.8, 6.4, 1.6]} />
+          <meshStandardMaterial color="#eab308" roughness={0.75} />
+        </mesh>
+
+        {/* Mái ngói dốc kiểu Pháp màu cam đất nung */}
+        <mesh position={[0, 6.7, 0]} rotation={[0, 0, 0]} castShadow>
+          <boxGeometry args={[7.2, 0.6, 2.0]} />
+          <meshStandardMaterial color="#9a3412" roughness={0.65} />
+        </mesh>
+
+        {/* Gờ chỉ phào phân tầng kiến trúc Pháp */}
+        <mesh position={[0, 3.2, 0.82]}>
+          <boxGeometry args={[7.0, 0.18, 0.12]} />
+          <meshStandardMaterial color="#fef08a" roughness={0.5} />
+        </mesh>
+
+        {/* Cửa sổ chớp gỗ xanh lá sẫm tầng 2 */}
+        {[-2.0, 0, 2.0].map((wx, wi) => (
+          <group key={`win-${wi}`} position={[wx, 4.5, 0.82]}>
+            {/* Khung vòm cửa sổ */}
+            <mesh castShadow>
+              <boxGeometry args={[1.1, 1.6, 0.1]} />
+              <meshStandardMaterial color="#14532d" roughness={0.5} />
+            </mesh>
+            {/* Ban công sắt nghệ thuật nhỏ nhô ra */}
+            <mesh position={[0, -0.7, 0.2]}>
+              <boxGeometry args={[1.3, 0.45, 0.35]} />
+              <meshStandardMaterial color="#0f172a" metalness={0.9} roughness={0.3} wireframe={false} />
+            </mesh>
+            {/* Chậu hoa ban công */}
+            <mesh position={[0, -0.45, 0.35]}>
+              <boxGeometry args={[1.0, 0.15, 0.15]} />
+              <meshStandardMaterial color="#f472b6" roughness={0.6} />
+            </mesh>
+          </group>
+        ))}
+
+        {/* Tầng 1: Biển hiệu quán CÀ PHÊ PHỐ CỔ 1986 */}
+        <mesh position={[0, 2.7, 0.85]}>
+          <boxGeometry args={[3.2, 0.5, 0.08]} />
+          <meshStandardMaterial color="#451a03" roughness={0.5} />
+        </mesh>
+
+        {/* Mái hiên di động bạt sọc đỏ trắng vỉa hè */}
+        <group position={[0, 2.2, 1.2]} rotation={[0.3, 0, 0]}>
+          <mesh castShadow>
+            <boxGeometry args={[4.2, 0.05, 1.0]} />
+            <meshStandardMaterial color="#dc2626" roughness={0.7} />
+          </mesh>
+        </group>
+      </group>
+
+      {/* 7.2 Tòa nhà văn phòng công nghệ Modern Glass Tech Hub bên cạnh */}
+      <group position={[3.2, 0, -10.4]}>
+        {/* Khối tháp kính xanh hiện đại */}
+        <mesh position={[0, 4.2, 0]} castShadow receiveShadow>
+          <boxGeometry args={[5.8, 8.4, 1.5]} />
+          <meshStandardMaterial color="#0f172a" metalness={0.7} roughness={0.3} />
+        </mesh>
+        {/* Các mảng kính phản quang màu cyan */}
+        <mesh position={[0, 4.2, 0.77]}>
+          <planeGeometry args={[5.4, 7.8]} />
+          <meshPhysicalMaterial
+            color="#0ea5e9"
+            metalness={0.6}
+            roughness={0.1}
+            transmission={0.4}
+            transparent
+            opacity={0.85}
+          />
+        </mesh>
+      </group>
+
+      {/* ================= 8. CỘT ĐÈN ĐƯỜNG CỔ ĐIỂN HÀ NỘI (VINTAGE COLONIAL STREET LAMP) ================= */}
+      <group position={[7.6, 0, 7.6]}>
+        {/* Khối đế gang đúc hoa văn */}
+        <mesh position={[0, 0.35, 0]} castShadow>
+          <cylinderGeometry args={[0.22, 0.3, 0.7, 16]} />
+          <meshStandardMaterial color="#14532d" roughness={0.5} metalness={0.6} />
+        </mesh>
+        {/* Thân cột gang cao uốn lượn */}
+        <mesh position={[0, 2.3, 0]} castShadow>
+          <cylinderGeometry args={[0.08, 0.14, 3.4, 16]} />
+          <meshStandardMaterial color="#14532d" roughness={0.4} metalness={0.7} />
+        </mesh>
+        {/* Vành tay vươn cong cổ điển */}
+        <mesh position={[0, 4.05, 0]}>
+          <boxGeometry args={[1.2, 0.12, 0.12]} />
+          <meshStandardMaterial color="#14532d" metalness={0.8} />
+        </mesh>
+
+        {/* 2 Chao đèn lồng hình lục giác tỏa sáng vàng ấm */}
+        {[-0.5, 0.5].map((lx, li) => (
+          <group key={`lamp-${li}`} position={[lx, 3.8, 0]}>
+            <mesh castShadow>
+              <cylinderGeometry args={[0.18, 0.12, 0.35, 6]} />
+              <meshStandardMaterial
+                color="#fef08a"
+                emissive="#f59e0b"
+                emissiveIntensity={isNight ? 3.0 : 1.2}
+                roughness={0.2}
+              />
+            </mesh>
+            {/* Nắp nón chao đèn đồng */}
+            <mesh position={[0, 0.22, 0]}>
+              <coneGeometry args={[0.24, 0.14, 6]} />
+              <meshStandardMaterial color="#0f172a" metalness={0.9} />
+            </mesh>
+            <pointLight
+              position={[0, -0.1, 0]}
+              color="#fbbf24"
+              intensity={isNight ? 2.5 : 1.0}
+              distance={7}
+              decay={2}
+            />
+          </group>
+        ))}
+      </group>
+
+      {/* ================= 9. LÒNG ĐƯỜNG NHỰA ASPHALT & VẠCH SANG ĐƯỜNG (ZEBRA CROSSING) ================= */}
+      <group position={[9.4, 0, 0]}>
+        {/* Mặt đường nhựa Asphalt đen xám */}
+        <mesh position={[0, 0.04, 0]} receiveShadow>
+          <boxGeometry args={[2.8, 0.04, 21.6]} />
+          <meshStandardMaterial color="#18181b" roughness={0.95} />
+        </mesh>
+
+        {/* Vạch kẻ đường cho người đi bộ (Zebra Crossing) tại góc ngã tư */}
+        {[-1.5, -0.9, -0.3, 0.3, 0.9, 1.5].map((zz, zi) => (
+          <mesh key={`zebra-${zi}`} position={[0, 0.065, 3.5 + zz]} rotation={[-Math.PI / 2, 0, 0]}>
+            <planeGeometry args={[2.2, 0.38]} />
+            <meshStandardMaterial color="#f1f5f9" roughness={0.8} />
+          </mesh>
+        ))}
+
+        {/* Vạch tim đường đứt đoạn màu vàng nét đứt */}
+        {[-8, -5, -2, 7, 10].map((zy, yi) => (
+          <mesh key={`lane-${yi}`} position={[0.2, 0.065, zy]} rotation={[-Math.PI / 2, 0, 0]}>
+            <planeGeometry args={[0.15, 1.8]} />
+            <meshStandardMaterial color="#facc15" roughness={0.7} />
+          </mesh>
+        ))}
+      </group>
+
+      {/* ================= 10. GÓC CÀ PHÊ & TRÀ ĐÁ VỈA HÈ HÀ NỘI ================= */}
+      <group position={[7.6, 0.08, -3.2]}>
+        {/* Bàn gỗ con mộc mạc vỉa hè */}
+        <mesh position={[0, 0.32, 0]} castShadow>
+          <boxGeometry args={[0.7, 0.04, 0.7]} />
+          <meshStandardMaterial color="#78350f" roughness={0.7} />
+        </mesh>
+        <mesh position={[0, 0.16, 0]} castShadow>
+          <cylinderGeometry args={[0.04, 0.04, 0.32, 12]} />
+          <meshStandardMaterial color="#0f172a" />
+        </mesh>
+        {/* Phin cà phê nhôm truyền thống trên bàn */}
+        <mesh position={[-0.15, 0.4, 0.05]} castShadow>
+          <cylinderGeometry args={[0.05, 0.045, 0.1, 16]} />
+          <meshStandardMaterial color="#e2e8f0" metalness={0.9} roughness={0.2} />
+        </mesh>
+        {/* Ly trà đá thủy tinh Hà Nội */}
+        <mesh position={[0.15, 0.39, -0.05]} castShadow>
+          <cylinderGeometry args={[0.04, 0.035, 0.11, 16]} />
+          <meshPhysicalMaterial color="#38bdf8" transmission={0.85} roughness={0.1} transparent />
+        </mesh>
+
+        {/* 2 Chiếc ghế đẩu nhỏ đặt quanh bàn */}
+        <mesh position={[-0.45, 0.15, 0]} castShadow>
+          <boxGeometry args={[0.3, 0.3, 0.3]} />
+          <meshStandardMaterial color="#1e3a8a" roughness={0.6} />
+        </mesh>
+        <mesh position={[0.45, 0.15, 0]} castShadow>
+          <boxGeometry args={[0.3, 0.3, 0.3]} />
+          <meshStandardMaterial color="#dc2626" roughness={0.6} />
+        </mesh>
+      </group>
+
+      {/* ================= 11. XE Ô TÔ ĐIỆN ĐÔ THỊ MINI (CYBER SMART CAR) ĐỖ VEN ĐƯỜNG ================= */}
+      <group
+        position={[9.4, 0.08, -6.5]}
+        onClick={(e) => {
+          e.stopPropagation()
+          onSelect?.({
+            id: 'smart-ev-car',
+            title: 'Xe Điện Đô Thị Mini Tự Hành (Smart City Robotaxi)',
+            category: 'Smart Mobility & Logistics',
+            price: 'Công nghệ: Tự hành Cấp độ 4 (Level 4 Autonomous)',
+            specs: [
+              'Động cơ điện nam châm vĩnh cửu công suất 45kW, phạm vi di chuyển 300km/lần sạc',
+              'Cụm cảm biến LiDAR 360° trên nóc xe và camera AI nhận diện vật cản đô thị',
+              'Tự động định vị đón trả khách dạo phố công nghệ và giao linh kiện mạch in tốc hành'
+            ],
+            desc: 'Phương tiện giao thông xanh nhỏ gọn đỗ ven hè phố tự động hóa, là giải pháp di chuyển thông minh cho cư dân đô thị tương lai.'
+          })
+        }}
+        cursor="pointer"
+      >
+        {/* Thân xe bo tròn màu xanh ngọc Cyber Mint */}
+        <mesh position={[0, 0.55, 0]} castShadow receiveShadow>
+          <boxGeometry args={[1.5, 0.65, 2.6]} />
+          <meshStandardMaterial color="#06b6d4" roughness={0.25} metalness={0.6} />
+        </mesh>
+
+        {/* Khoang cabin kính nóc Panorama vòm tròn */}
+        <mesh position={[0, 0.95, -0.1]} castShadow>
+          <boxGeometry args={[1.35, 0.55, 1.6]} />
+          <meshPhysicalMaterial
+            color="#0f172a"
+            transmission={0.85}
+            roughness={0.1}
+            metalness={0.9}
+            transparent
+            opacity={0.8}
+          />
+        </mesh>
+
+        {/* Đèn pha LED trước xe */}
+        <mesh position={[0, 0.52, 1.31]}>
+          <boxGeometry args={[1.2, 0.08, 0.02]} />
+          <meshStandardMaterial
+            color="#ffffff"
+            emissive="#ffffff"
+            emissiveIntensity={isNight ? 3 : 1}
+          />
+        </mesh>
+
+        {/* 4 Bánh xe cao su mâm đúc thể thao */}
+        {[-0.8, 0.8].map((bx, bi) =>
+          [-0.85, 0.85].map((bz, bj) => (
+            <mesh key={`wheel-${bi}-${bj}`} position={[bx, 0.25, bz]} rotation={[0, 0, Math.PI / 2]} castShadow>
+              <cylinderGeometry args={[0.26, 0.26, 0.16, 20]} />
+              <meshStandardMaterial color="#09090b" roughness={0.8} />
+            </mesh>
+          ))
+        )}
+
+        {/* Cụm cảm biến LiDAR xoay trên nóc xe */}
+        <mesh position={[0, 1.3, -0.1]}>
+          <cylinderGeometry args={[0.1, 0.1, 0.12, 16]} />
+          <meshStandardMaterial color="#0f172a" metalness={0.9} />
+        </mesh>
+      </group>
+
+      {/* ================= 12. BỒN HOA CÔNG VIÊN VEN HÈ ================= */}
+      <group position={[7.6, 0.08, -8.2]}>
+        {/* Thành bồn hoa xây đá xám bo viền */}
+        <mesh position={[0, 0.2, 0]} castShadow>
+          <boxGeometry args={[1.2, 0.4, 2.0]} />
+          <meshStandardMaterial color="#334155" roughness={0.7} />
+        </mesh>
+        {/* Đất mùn hữu cơ */}
+        <mesh position={[0, 0.38, 0]}>
+          <boxGeometry args={[1.0, 0.05, 1.8]} />
+          <meshStandardMaterial color="#451a03" roughness={0.9} />
+        </mesh>
+        {/* Các bụi hoa cúc vàng rực rỡ */}
+        {[-0.3, 0.3].map((hx, hi) =>
+          [-0.6, 0, 0.6].map((hz, hj) => (
+            <mesh key={`fl-${hi}-${hj}`} position={[hx, 0.48, hz]} castShadow>
+              <sphereGeometry args={[0.14, 8, 8]} />
+              <meshStandardMaterial color="#facc15" roughness={0.6} />
+            </mesh>
+          ))
+        )}
+      </group>
     </group>
   )
 }
+
