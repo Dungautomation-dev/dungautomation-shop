@@ -77,3 +77,9 @@ npm run dev
 
 Dự án được xây dựng và phát triển bởi **Dung Automation**  
 *Mã nguồn mở theo giấy phép MIT License.*
+
+---
+
+## Stars ⭐
+
+[![Star History Chart](https://api.star-history.com/svg?repos=Dungautomation-dev/dungautomation-shop&type=Date)](https://star-history.com/#Dungautomation-dev/dungautomation-shop&Date)
